@@ -1,34 +1,29 @@
 "use client"
 import { ReactNode, useState } from "react"
-import TestGroup from "../../types/test-group"
+import { TestGroup, Report, TestDetail } from "../../types/test-group"
 
-export default function TestTree({ group, onSelect }: { group: TestGroup, onSelect: (name: string) => void }) {
+export default function TestTree({ group, onSelect, activeTestName }: { group: Report, onSelect: (name: string) => void, activeTestName: string }) {
   return (
     <section className="menu">
-      {group.subGroups &&
-        (group.subGroups || []).map((subGroup) => (
-          <TopTree key={subGroup.name} group={subGroup} onSelect={onSelect}></TopTree>
-        ))}
+      <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTestName={activeTestName}></ListSubGroup>
     </section>
   )
 }
 
-function TopTree({ group, onSelect }: { group: TestGroup, onSelect: (name: string) => void }): ReactNode {
+function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: TestGroup | Report, folded: boolean, onSelect: (name: string) => void, activeTestName: string }): ReactNode {
   return (
     <>
-      <p className="menu-label">{group.name}</p>
-      <ListSubGroup group={group} folded={false} onSelect={onSelect}></ListSubGroup>
-    </>
-  )
-}
-
-function ListSubGroup({ group, folded, onSelect }: { group: TestGroup, folded: boolean, onSelect: (name: string) => void }): ReactNode {
-  return (
-    <>
-      {group.subGroups &&
+      {group.tests &&
         <ul className={`menu-list ${folded ? 'is-hidden' : ''}`}>
-          {(group.subGroups || []).map((subGroup) => (
-            <SubTree key={subGroup.name} group={subGroup} onSelect={onSelect}></SubTree>
+          {(group.tests || []).map((subGroup) => (
+            'steps' in subGroup ?
+              (
+                <Test key={subGroup.name} data={subGroup} onSelect={onSelect} activeTestName={activeTestName}></Test>
+              )
+              :
+              (
+                <SubTree key={subGroup.name} group={subGroup} onSelect={onSelect} activeTestName={activeTestName}></SubTree>
+              )
           ))}
         </ul>}
     </>
@@ -36,23 +31,40 @@ function ListSubGroup({ group, folded, onSelect }: { group: TestGroup, folded: b
 }
 
 
-export function SubTree({ group, onSelect }: { group: TestGroup, onSelect: (name: string) => void }) {
+function SubTree({ group, onSelect, activeTestName }: { group: TestGroup, onSelect: (name: string) => void, activeTestName: string }) {
 
   const [folded, setFolded] = useState(true);
 
   const select = () => {
     setFolded(current => !current)
-    onSelect(group.name)
   }
   return (
     <li>
       <a onClick={select}>
-        <span className="icon">
-          <i className={`fa-solid ${group.subGroups ? folded ? 'fa-chevron-right' : 'fa-chevron-down' : 'fa-fw'}`}></i>
-        </span>
-        {group.name}
+        {group.tests &&
+          <span className="icon">
+            <i className={`${folded ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down'}`}></i>
+          </span>
+        }
+        <span className="">{group.name}</span>
       </a>
-      <ListSubGroup group={group} folded={folded} onSelect={onSelect}></ListSubGroup>
+      <ListSubGroup group={group} folded={folded} onSelect={onSelect} activeTestName={activeTestName}></ListSubGroup>
+    </li>
+  )
+}
+
+
+function Test({ data, onSelect, activeTestName }: { data: TestDetail, onSelect: (name: string) => void, activeTestName: string }) {
+
+  const select = () => {
+    onSelect(data.name)
+  }
+  return (
+    <li>
+      <a className={activeTestName === data.name ? 'is-active' : ''}
+        onClick={select}>
+        <span>{data.name}</span>
+      </a>
     </li>
   )
 }

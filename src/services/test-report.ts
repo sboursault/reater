@@ -1,50 +1,91 @@
-import TestGroup from "@/types/test-group";
+import { Report } from "@/types/test-group";
 
-export default function getReport(): TestGroup {
+export default function getReport(): Report {
     return {
-        name: "",
-        subGroups: [
+        tests: [
             {
-                name: "child 1",
+                name: "Test 1",
+                steps: [
+                    "Step 1",
+                    "Step 2",
+                    "Step 3",
+                ]
             },
             {
-                name: "child 2",
-                subGroups: [
+                name: "Test 2",
+                tests: [
                     {
-                        name: "child 2-1",
+                        name: "Test 2-1",
                     },
                     {
-                        name: "child 2-2",
-                        subGroups: [
+                        name: "Test 2-2",
+                        tests: [
                             {
-                                name: "child 2-2-1",
+                                name: "Test 2-2-1",
                             },
                             {
-                                name: "child 2-2-2",
+                                name: "Test 2-2-2",
                             },
                             {
-                                name: "child 2-2-3",
+                                name: "Test 2-2-3",
+                                tests: [
+                                    {
+                                        name: "Test 2-2-3-1",
+                                    },
+                                    {
+                                        name: "Test 2-2-3-2",
+                                    },
+                                    {
+                                        name: "Test 2-2-3-3",
+                                        tests: [
+                                            {
+                                                name: "Test 2-2-3-3-1",
+                                            },
+                                            {
+                                                name: "Test 2-2-3-3-2",
+                                            },
+                                            {
+                                                name: "Test 2-2-3-3-3",
+                                            },
+                                        ]
+                                    },
+                                ]
                             },
                         ]
                     },
                     {
-                        name: "child 2-3",
+                        name: "Test 2-3",
                     },
                 ]
             },
             {
-                name: "child 3",
-                subGroups: [
+                name: "Test 3",
+                tests: [
                     {
-                        name: "child 3-1",
+                        name: "Test 3-1",
+                        steps: [
+                            "Step 1",
+                            "Step 2",
+                            "Step 3",
+                        ]
                     },
                     {
-                        name: "child 3-3",
+                        name: "Test 3-3",
+                        steps: [
+                            "Step 1",
+                            "Step 2",
+                            "Step 3",
+                        ]
                     },
                 ]
             },
             {
-                name: "child 4",
+                name: "Test 4",
+                steps: [
+                    "Step 1",
+                    "Step 2",
+                    "Step 3",
+                ]
             }
         ]
     }

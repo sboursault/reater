@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export default function Home() {
   const [activeTestName, setActiveTestName] = useState('');
-  const onSelect: (name:string) => void = (name:string) => setActiveTestName(name)
+  const onSelect: (name: string) => void = (name: string) => setActiveTestName(name)
   return (
     <div className="container">
       <section className="hero">
@@ -18,7 +18,7 @@ export default function Home() {
         </div>
       </section>
 
-      <TestTree group={getReport()} onSelect={onSelect}></TestTree>
+      <TestTree group={getReport()} onSelect={onSelect} activeTestName={activeTestName}></TestTree>
       <TestDetail name={activeTestName}></TestDetail>
     </div>
   );
