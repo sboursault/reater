@@ -2,13 +2,21 @@
 import 'bulma/bulma.scss'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import TestTree from "./_components/test-tree";
-import getReport from "@/services/test-report";
+import getReport from "@/services/report.service";
 import TestDetail from './_components/test-detail';
 import { useState } from 'react';
 
 export default function Home() {
   const [activeTestName, setActiveTestName] = useState('');
-  const onSelect: (name: string) => void = (name: string) => setActiveTestName(name)
+  const [showTestDetail, setShowTestDetail] = useState(false);
+  const onSelect: (name: string) => void = (name: string) => {
+    if (name) setShowTestDetail(true)
+    else setTimeout(                       // setTimeout avoids flickering
+      () => setShowTestDetail(false), 200  // when the detail disapears
+    )
+    setActiveTestName(name);
+  }
+  const deActivate: () => void = () => onSelect('');
   return (
     <div className="container">
       <section className="hero">
@@ -18,8 +26,15 @@ export default function Home() {
         </div>
       </section>
 
-      <TestTree group={getReport()} onSelect={onSelect} activeTestName={activeTestName}></TestTree>
-      <TestDetail name={activeTestName}></TestDetail>
+      <div className="columns">
+        <div className="column">
+          <TestTree group={getReport()} onSelect={onSelect} activeTestName={activeTestName}></TestTree>
+        </div>
+        <div className={`column ${!showTestDetail ? 'is-hidden' : ''}`}>
+          <TestDetail name={activeTestName} onClose={deActivate}></TestDetail>
+        </div>
+      </div>
+
     </div>
   );
 }
