@@ -1,6 +1,6 @@
 "use client"
 import { ReactNode, useState } from "react"
-import { TestGroup, Report, TestDetail } from "../../types/test-group"
+import { TestGroup, Report, TestDetail, Status } from "../../types/report"
 
 export default function TestTree({ group, onSelect, activeTestName }: { group: Report, onSelect: (name: string) => void, activeTestName: string }) {
   return (
@@ -16,7 +16,7 @@ function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: Test
       {group.tests &&
         <ul className={`menu-list ${folded ? 'is-hidden' : ''}`}>
           {(group.tests || []).map((subGroup) => (
-            'steps' in subGroup ?
+            'executions' in subGroup ?
               (
                 <Test key={subGroup.name} data={subGroup} onSelect={onSelect} activeTestName={activeTestName}></Test>
               )
@@ -46,7 +46,7 @@ function SubTree({ group, onSelect, activeTestName }: { group: TestGroup, onSele
             <i className={`${folded ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down'}`}></i>
           </span>
         }
-        <span className="">{group.name}</span>
+        <span className="ml-1">{group.name}</span>
       </a>
       <ListSubGroup group={group} folded={folded} onSelect={onSelect} activeTestName={activeTestName}></ListSubGroup>
     </li>
@@ -55,15 +55,24 @@ function SubTree({ group, onSelect, activeTestName }: { group: TestGroup, onSele
 
 
 function Test({ data, onSelect, activeTestName }: { data: TestDetail, onSelect: (name: string) => void, activeTestName: string }) {
-
   const select = () => {
     onSelect(data.name)
   }
+  const tags = data.executions.map((execution, index) => {
+    const status = execution.status == Status.success ? 'has-background-success-25 has-text-success-25-invert' : execution.status == Status.failed ? 'has-background-danger-30 has-text-danger-30-invert' : 'is-dark'
+    return (
+      <span key={index} className={`tag ${status}`}>{execution.name}</span>
+    )
+  })
   return (
-    <li>
-      <a className={activeTestName === data.name ? 'is-active' : ''}
+    <li className="">
+      <a className={` ${activeTestName === data.name ? 'is-active' : ''}`}
         onClick={select}>
-        <span>{data.name}</span>
+        <div className="is-flex is-align-items-center" ><span>{data.name}</span>
+          <div className="tags ml-3">
+            {tags}
+          </div>
+        </div>
       </a>
     </li>
   )

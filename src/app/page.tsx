@@ -1,8 +1,8 @@
 "use client"
-import 'bulma/bulma.scss'
+import './ubiquity.scss'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import TestTree from "./_components/test-tree";
-import getReport from "@/services/report.service";
+import {getFromReportFile} from "@/services/report.service";
 import TestDetail from './_components/test-detail';
 import { useState } from 'react';
 
@@ -28,7 +28,7 @@ export default function Home() {
 
       <div className="columns">
         <div className="column">
-          <TestTree group={getReport()} onSelect={onSelect} activeTestName={activeTestName}></TestTree>
+          <TestTree group={getFromReportFile()} onSelect={onSelect} activeTestName={activeTestName}></TestTree>
         </div>
         <div className={`column ${!showTestDetail ? 'is-hidden' : ''}`}>
           <TestDetail name={activeTestName} onClose={deActivate}></TestDetail>
