@@ -57,9 +57,9 @@ export interface Project {
 
 export interface Suite {
   title: string
-  //file: string
-  //column: number
-  //line: number
+  file: string
+  column: number
+  line: number
   //specs: Spec[]
   suites?: Suite[]
 }

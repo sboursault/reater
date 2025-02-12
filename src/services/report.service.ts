@@ -18,6 +18,10 @@ function convertPwSuiteArray(source: Suite[]): (TestGroup | TestDetail)[] {
 }
 
 function convertPwSuite(source: Suite): TestGroup {
+
+    if (source.title == source.file
+        && source.suites?.length == 1)
+        source = source.suites[0]
     return {
         name: source.title,
         tests: convertPwSuiteArray(source.suites || [])
