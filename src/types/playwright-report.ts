@@ -1,11 +1,11 @@
-export interface PlaywrightReport {
+export interface PwReport {
   //config: Config
-  suites: Suite[]
+  suites: PwSuite[]
   //errors: any[]
   //stats: Stats
 }
 
-export interface Config {
+export interface PwConfig {
   configFile: string
   rootDir: string
   forbidOnly: boolean
@@ -16,9 +16,9 @@ export interface Config {
   grep: any
   grepInvert: any
   maxFailures: number
-  metadata: Metadata
+  metadata: PwMetadata
   preserveOutput: string
-  reporter: [string, Reporter | undefined][]
+  reporter: [string, PwReporter | undefined][]
   reportSlowTests: ReportSlowTests
   quiet: boolean
   projects: Project[]
@@ -29,11 +29,11 @@ export interface Config {
   webServer: any
 }
 
-export interface Metadata {
+export interface PwMetadata {
   actualWorkers: number
 }
 
-export interface Reporter {
+export interface PwReporter {
   outputFile: string
 }
 
@@ -55,24 +55,24 @@ export interface Project {
   timeout: number
 }
 
-export interface Suite {
+export interface PwSuite {
   title: string
   file: string
   column: number
   line: number
-  //specs: Spec[]
-  suites?: Suite[]
+  specs: PwSpec[]
+  suites?: PwSuite[]
 }
 
-export interface Spec {
+export interface PwSpec {
   title: string
-  ok: boolean
-  tags: any[]
-  tests: Test[]
-  id: string
-  file: string
-  line: number
-  column: number
+  //ok: boolean
+  //tags: any[]
+  //tests: Test[]
+  //id: string
+  //file: string
+  //line: number
+  //column: number
 }
 
 export interface Test {

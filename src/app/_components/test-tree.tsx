@@ -1,6 +1,6 @@
 "use client"
 import { ReactNode, useState } from "react"
-import { TestGroup, Report, TestDetail, Status } from "../../types/report"
+import { Suite, Report, Test, Status } from "../../types/report"
 
 export default function TestTree({ group, onSelect, activeTestName }: { group: Report, onSelect: (name: string) => void, activeTestName: string }) {
   return (
@@ -10,19 +10,19 @@ export default function TestTree({ group, onSelect, activeTestName }: { group: R
   )
 }
 
-function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: TestGroup | Report, folded: boolean, onSelect: (name: string) => void, activeTestName: string }): ReactNode {
+function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: Suite | Report, folded: boolean, onSelect: (name: string) => void, activeTestName: string }): ReactNode {
   return (
     <>
       {group.tests &&
         <ul className={`menu-list ${folded ? 'is-hidden' : ''}`}>
-          {(group.tests || []).map((subGroup) => (
+          {(group.tests || []).map((subGroup, index) => (
             'executions' in subGroup ?
               (
-                <Test key={subGroup.name} data={subGroup} onSelect={onSelect} activeTestName={activeTestName}></Test>
+                <Test key={index} data={subGroup} onSelect={onSelect} activeTestName={activeTestName}></Test>
               )
               :
               (
-                <SubTree key={subGroup.name} group={subGroup} onSelect={onSelect} activeTestName={activeTestName}></SubTree>
+                <SubTree key={index} group={subGroup} onSelect={onSelect} activeTestName={activeTestName}></SubTree>
               )
           ))}
         </ul>}
@@ -31,7 +31,7 @@ function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: Test
 }
 
 
-function SubTree({ group, onSelect, activeTestName }: { group: TestGroup, onSelect: (name: string) => void, activeTestName: string }) {
+function SubTree({ group, onSelect, activeTestName }: { group: Suite, onSelect: (name: string) => void, activeTestName: string }) {
 
   const [folded, setFolded] = useState(true);
 
@@ -54,7 +54,7 @@ function SubTree({ group, onSelect, activeTestName }: { group: TestGroup, onSele
 }
 
 
-function Test({ data, onSelect, activeTestName }: { data: TestDetail, onSelect: (name: string) => void, activeTestName: string }) {
+function Test({ data, onSelect, activeTestName }: { data: Test, onSelect: (name: string) => void, activeTestName: string }) {
   const select = () => {
     onSelect(data.name)
   }

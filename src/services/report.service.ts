@@ -1,31 +1,50 @@
-import { Report, Status, TestDetail, TestGroup } from "@/types/report";
+import { Report, Status, Test, Suite } from "@/types/report";
 import playwrightReport from "../../test-results-3-projects.json"
-import { PlaywrightReport, Suite } from "@/types/playwright-report";
+import { PwReport, PwSpec, PwSuite } from "@/types/playwright-report";
 
 
 export function getFromReportFile(): Report {
-    const source: PlaywrightReport = playwrightReport
+    const source: PwReport = playwrightReport
 
     return {
-        tests: convertPwSuiteArray(source.suites)
+        tests: convertSuiteArray(source.suites)
     }
 }
 
-function convertPwSuiteArray(source: Suite[]): (TestGroup | TestDetail)[] {
+function convertSuiteArray(source: PwSuite[]): (Suite | Test)[] {
     return source.map(suite => {
         return convertPwSuite(suite)
     })
 }
 
-function convertPwSuite(source: Suite): TestGroup {
+function convertPwSuite(source: PwSuite): Suite {
 
     if (source.title == source.file
         && source.suites?.length == 1)
         source = source.suites[0]
+
     return {
-        name: source.title,
-        tests: convertPwSuiteArray(source.suites || [])
+        name: buildGroupName(source),
+        tests: convertSuiteArray(source.suites || []).concat(convertSpecArray(source.specs))
     }
+}
+
+function buildGroupName(source: PwSuite) {
+    return source.title == source.file ?
+        capitalizeFirstLetter(source.title.replace('.ts', '').replace('.spec', '').replace('-', ' ')) : source.title
+}
+
+function capitalizeFirstLetter(s: string) {
+    return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function convertSpecArray(source: PwSpec[]): Test[] {
+    return source.map(each => {
+        return {
+            name: each.title,
+            executions: []
+        }
+    })
 }
 
 export function getDummyReport(): Report {

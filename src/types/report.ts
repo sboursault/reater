@@ -1,20 +1,19 @@
-export type Report = {
-    tests?: (TestGroup | TestDetail)[]
+export interface Report {
+    tests?: (Suite | Test)[]
 }
 
-
-export type TestGroup = {
+export interface Suite {
     name: string
-    tests?: (TestGroup | TestDetail)[]
+    tests?: (Suite | Test)[]
 }
 
-export type TestDetail = {
+export interface Test {
     name: string
     steps?: string[]
     executions: Execution[]
 }
 
-export type Execution = {
+export interface Execution {
     name: string
     status: Status
 }
