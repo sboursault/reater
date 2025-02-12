@@ -66,23 +66,23 @@ export interface PwSuite {
 
 export interface PwSpec {
   title: string
-  //ok: boolean
+  ok: boolean
   //tags: any[]
-  //tests: Test[]
+  tests: PwTest[]
   //id: string
-  //file: string
-  //line: number
-  //column: number
+  file: string
+  line: number
+  column: number
 }
 
-export interface Test {
-  timeout: number
-  annotations: any[]
-  expectedStatus: string
-  projectId: string
+export interface PwTest {
+  //timeout: number
+  //annotations: any[]
+  //expectedStatus: string
+  //projectId: string
   projectName: string
-  results: Result[]
-  status: string
+  //results: Result[]
+  //status: string
 }
 
 export interface Result {

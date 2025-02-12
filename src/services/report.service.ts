@@ -1,4 +1,4 @@
-import { Report, Status, Test, Suite } from "@/types/report";
+import { Report, Status, Test, Suite, Execution } from "@/types/report";
 import playwrightReport from "../../test-results-3-projects.json"
 import { PwReport, PwSpec, PwSuite } from "@/types/playwright-report";
 
@@ -39,12 +39,30 @@ function capitalizeFirstLetter(s: string) {
 }
 
 function convertSpecArray(source: PwSpec[]): Test[] {
-    return source.map(each => {
-        return {
-            name: each.title,
-            executions: []
-        }
+
+    const groupByFileAndLine = new Map<string, PwSpec[]>();
+    const target: Test[] = []
+
+    source.forEach(each => {
+        const key: string = each.file + ':' + each.line
+        if (!groupByFileAndLine.has(key))
+            groupByFileAndLine.set(key, [])
+        groupByFileAndLine.get(key)?.push(each)
     })
+
+    groupByFileAndLine.forEach((group) => {
+        const executions: Execution[] = group.map(spec => {
+            return {
+                name: spec.tests[0].projectName,
+                status: spec.ok ? Status.success : Status.failed
+            }
+        })
+        target.push({
+            name: group[0].title,
+            executions: executions
+        })
+    })
+    return target
 }
 
 export function getDummyReport(): Report {

@@ -18,7 +18,7 @@ function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: Suit
           {(group.tests || []).map((subGroup, index) => (
             'executions' in subGroup ?
               (
-                <Test key={index} data={subGroup} onSelect={onSelect} activeTestName={activeTestName}></Test>
+                <TestRow key={index} data={subGroup} onSelect={onSelect} activeTestName={activeTestName}></TestRow>
               )
               :
               (
@@ -54,7 +54,7 @@ function SubTree({ group, onSelect, activeTestName }: { group: Suite, onSelect: 
 }
 
 
-function Test({ data, onSelect, activeTestName }: { data: Test, onSelect: (name: string) => void, activeTestName: string }) {
+function TestRow({ data, onSelect, activeTestName }: { data: Test, onSelect: (name: string) => void, activeTestName: string }) {
   const select = () => {
     onSelect(data.name)
   }
