@@ -2,15 +2,15 @@
 import { ReactNode, useState } from "react"
 import { Suite, Report, Test, Status } from "../../types/report"
 
-export default function TestTree({ group, onSelect, activeTestName }: { group: Report, onSelect: (name: string) => void, activeTestName: string }) {
+export default function TestTree({ group, onSelect, activeTest }: { group: Report, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
   return (
     <section className="menu">
-      <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTestName={activeTestName}></ListSubGroup>
+      <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTest={activeTest}></ListSubGroup>
     </section>
   )
 }
 
-function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: Suite | Report, folded: boolean, onSelect: (name: string) => void, activeTestName: string }): ReactNode {
+function ListSubGroup({ group, folded, onSelect, activeTest }: { group: Suite | Report, folded: boolean, onSelect: (test: Test | null) => void, activeTest: Test | null }): ReactNode {
   return (
     <>
       {group.tests &&
@@ -18,11 +18,11 @@ function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: Suit
           {(group.tests || []).map((subGroup, index) => (
             'executions' in subGroup ?
               (
-                <TestRow key={index} data={subGroup} onSelect={onSelect} activeTestName={activeTestName}></TestRow>
+                <TestRow key={index} data={subGroup} onSelect={onSelect} activeTest={activeTest}></TestRow>
               )
               :
               (
-                <SubTree key={index} group={subGroup} onSelect={onSelect} activeTestName={activeTestName}></SubTree>
+                <SubTree key={index} group={subGroup} onSelect={onSelect} activeTest={activeTest}></SubTree>
               )
           ))}
         </ul>}
@@ -31,7 +31,7 @@ function ListSubGroup({ group, folded, onSelect, activeTestName }: { group: Suit
 }
 
 
-function SubTree({ group, onSelect, activeTestName }: { group: Suite, onSelect: (name: string) => void, activeTestName: string }) {
+function SubTree({ group, onSelect, activeTest }: { group: Suite, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
 
   const [folded, setFolded] = useState(true);
 
@@ -48,15 +48,15 @@ function SubTree({ group, onSelect, activeTestName }: { group: Suite, onSelect: 
         }
         <span className="ml-1">{group.name}</span>
       </a>
-      <ListSubGroup group={group} folded={folded} onSelect={onSelect} activeTestName={activeTestName}></ListSubGroup>
+      <ListSubGroup group={group} folded={folded} onSelect={onSelect} activeTest={activeTest}></ListSubGroup>
     </li>
   )
 }
 
 
-function TestRow({ data, onSelect, activeTestName }: { data: Test, onSelect: (name: string) => void, activeTestName: string }) {
+function TestRow({ data, onSelect, activeTest }: { data: Test, onSelect: (test: Test | null) => void, activeTest: Test | null}) {
   const select = () => {
-    onSelect(data.name)
+    onSelect(data)
   }
   const tags = data.executions.map((execution, index) => {
     const status = execution.status == Status.success ? 'has-background-success-25 has-text-success-25-invert' : execution.status == Status.failed ? 'has-background-danger-30 has-text-danger-30-invert' : 'is-dark'
@@ -66,7 +66,7 @@ function TestRow({ data, onSelect, activeTestName }: { data: Test, onSelect: (na
   })
   return (
     <li className="">
-      <a className={` ${activeTestName === data.name ? 'is-active' : ''}`}
+      <a className={` ${activeTest?.name === data.name ? 'is-active' : ''}`}
         onClick={select}>
         <div className="is-flex is-align-items-center" ><span>{data.name}</span>
           <div className="tags ml-3">
