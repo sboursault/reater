@@ -1,4 +1,8 @@
 @use 'bulma/sass' with (
-  $menu-nested-list-margin: 0.75em 0 0.75em 0.75em,
-  //$danger: #dc4f35,
-);
+    $strong-weight: 500,
+    $menu-nested-list-margin: 0.75em 0 0.75em 0.75em,
+    $danger: #df5e46,
+    // https://mdigi.tools/color-shades/#dc4f35 (#dc4f35 is bootstrap's danger color)
+    $success: #2aaf48,
+    // https://mdigi.tools/color-shades/#28a745  (#dc4f35 is bootstrap's success color)
+  );

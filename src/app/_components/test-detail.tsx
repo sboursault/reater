@@ -1,29 +1,28 @@
-import { Test } from "@/types/report"
+import { Status, Test } from "@/types/report"
 
-export default function TestDetail({ test, onClose }: { test?: Test | null, onClose: () => void }) {
+export default function TestDetail({ data, onClose }: { data: Test, onClose: () => void }) {
 
-  if (!test) return (<></>)
-
-  /*const tags = data.executions.map((execution, index) => {
-    const status = execution.status == Status.success ? 'has-background-success-25 has-text-success-25-invert' : execution.status == Status.failed ? 'has-background-danger-30 has-text-danger-30-invert' : 'is-dark'
+  const tabs = data.executions.map((execution, index) => {
+    const color = execution.status == Status.success ? 'has-text-success' : execution.status == Status.failed ? 'has-text-danger-60' : 'is-dark'
+    
     return (
-      <span key={index} className={`tag ${status}`}>{execution.name}</span>
+      <li key={index} className={index == 0 ? 'is-active' : ''}><a className={color}><strong>{execution.name}</strong></a></li>
     )
-  })*/
+  })
 
   return (
-    <article className="box" >
+    <article className="box">
       <div className="block is-flex is-justify-content-space-between is-size-5">
-        <h2><strong>{test.name}</strong></h2>
+        <h2><strong>{data.name}</strong></h2>
         <button className="delete is-medium" onClick={onClose}></button>
       </div>
       <div className="tabs">
         <ul>
-          <li className="is-active"><a>Pictures</a></li>
-          <li><a>Music</a></li>
-          <li><a>Videos</a></li>
-          <li><a>Documents</a></li>
+          {tabs}
         </ul>
+      </div>
+      <div className="block">
+
       </div>
     </article>
   )

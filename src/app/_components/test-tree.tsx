@@ -59,9 +59,9 @@ function TestRow({ data, onSelect, activeTest }: { data: Test, onSelect: (test: 
     onSelect(data)
   }
   const tags = data.executions.map((execution, index) => {
-    const status = execution.status == Status.success ? 'has-background-success-25 has-text-success-25-invert' : execution.status == Status.failed ? 'has-background-danger-30 has-text-danger-30-invert' : 'is-dark'
+    const status = execution.status == Status.success ? 'has-text-success-soft-invert has-background-success-soft' : execution.status == Status.failed ? 'has-text-danger-soft-invert has-background-danger-soft' : 'is-dark'
     return (
-      <span key={index} className={`tag ${status}`}>{execution.name}</span>
+      <span key={index} className={`tag ${status} light-color`}>{execution.name}</span>
     )
   })
   return (

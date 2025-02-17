@@ -1,4 +1,6 @@
+//"use client"
 import type { Metadata } from "next";
+//import { useState } from "react";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -10,9 +12,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  //const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
+  //const [theme, setTheme] = useState(getCurrentTheme());
+
+
   return (
-    <html lang="en">
+    <html className="theme-light" lang="en">
       <body>
+        {/*theme*/}
         {children}
       </body>
     </html>

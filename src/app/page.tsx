@@ -2,7 +2,7 @@
 import './ubiquity.scss'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import TestTree from "./_components/test-tree";
-import {getFromReportFile} from "@/services/report.service";
+import { getFromReportFile } from "@/services/report.service";
 import TestDetail from './_components/test-detail';
 import { useState } from 'react';
 import { Test } from '@/types/report';
@@ -32,7 +32,8 @@ export default function Home() {
           <TestTree group={getFromReportFile()} onSelect={onSelect} activeTest={activeTest}></TestTree>
         </div>
         <div className={`column ${!showTestDetail ? 'is-hidden' : ''}`}>
-          <TestDetail test={activeTest} onClose={deActivate}></TestDetail>
+          {activeTest
+            && <TestDetail data={activeTest} onClose={deActivate}></TestDetail>}
         </div>
       </div>
 
