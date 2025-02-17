@@ -1,6 +1,6 @@
-//"use client"
 import type { Metadata } from "next";
-//import { useState } from "react";
+import ThemeSwitch from "./_components/theme-switch";
+import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -12,15 +12,16 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  //const getCurrentTheme = () => window.matchMedia("(prefers-color-scheme: dark)").matches;
-  //const [theme, setTheme] = useState(getCurrentTheme());
-
-
   return (
-    <html className="theme-light" lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        {/*theme*/}
-        {children}
+        <ThemeProvider>
+          <div className="has-text-left">
+            <ThemeSwitch></ThemeSwitch>
+          </div>
+          {/*theme*/}
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
