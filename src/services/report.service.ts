@@ -7,46 +7,46 @@ export function getFromReportFile(): Report {
     const source: PwReport = playwrightReport
 
     const suite = convertSuiteArray(source.suites)
-    suite.forEach(
-        each => {
-            calculateStatistics(each)
-        }
-    )
-    return {
+    const report: Report =  {
         tests: suite
     }
+    report.stats = calculateSuiteStatistics(report)
+    return report
 }
 
 
-function calculateStatistics(suite: Suite | Test) {
+function calculateSuiteStatistics(suite: Report | Suite | Test) {
 
     if ('executions' in suite) {
-        suite.stats = calculateExecutionStatistics(suite.executions)
+        return calculateTestStatistics(suite)
     }
 
     if ('tests' in suite) {
         (suite.tests || []).forEach(
             each => {
-                calculateStatistics(each)
+                each.stats = calculateSuiteStatistics(each)
             }
         )
+        const result = new Statistics();
+        (suite.tests || []).forEach(each => {
+            if (each.stats) {
+                result.passedCount += each.stats.passedCount
+                result.failedCount += each.stats.failedCount
+                result.skippedCount += each.stats.skippedCount
+            }
+        })
+        return result
     }
 }
 
 
-function calculateExecutionStatistics(executions: Execution[]) {
-    let passedCount = 0;
-    let failedCount = 0;
-    let skippedCount = 0;
-    executions.forEach(each => {
-        if (each.status == Status.success) passedCount++
-        if (each.status == Status.failed) failedCount++
-        if (each.status == Status.skipped) skippedCount++
-    })
+function calculateTestStatistics(test: Test) {
     const result = new Statistics()
-    result.passedCount = passedCount
-    result.failedCount = failedCount
-    result.skippedCount = skippedCount
+    test.executions.forEach(each => {
+        if (each.status == Status.success) result.passedCount++
+        if (each.status == Status.failed) result.failedCount++
+        if (each.status == Status.skipped) result.skippedCount++
+    })
     return result
 }
 

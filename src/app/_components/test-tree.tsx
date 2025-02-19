@@ -23,13 +23,13 @@ export default function TestTree({ group, onSelect, activeTest }: { group: Repor
       </div>
 
       <section className="menu">
-        <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTest={activeTest}></ListSubGroup>
+        <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTest={activeTest} filters={[Status.success, Status.failed, Status.skipped]}></ListSubGroup>
       </section>
     </>
   )
 }
 
-function ListSubGroup({ group, folded, onSelect, activeTest }: { group: Suite | Report, folded: boolean, onSelect: (test: Test | null) => void, activeTest: Test | null }): ReactNode {
+function ListSubGroup({ group, folded, onSelect, activeTest, filters }: { group: Suite | Report, folded: boolean, onSelect: (test: Test | null) => void, activeTest: Test | null, filters: Status[] }): ReactNode {
   return (
     <>
       {group.tests &&
@@ -37,11 +37,11 @@ function ListSubGroup({ group, folded, onSelect, activeTest }: { group: Suite | 
           {(group.tests || []).map((subGroup, index) => (
             'executions' in subGroup ?
               (
-                <TestRow key={index} data={subGroup} onSelect={onSelect} activeTest={activeTest}></TestRow>
+                <TestRow key={index} data={subGroup} onSelect={onSelect} activeTest={activeTest} filters={filters}></TestRow>
               )
               :
               (
-                <SubTree key={index} group={subGroup} onSelect={onSelect} activeTest={activeTest}></SubTree>
+                <SubTree key={index} data={subGroup} onSelect={onSelect} activeTest={activeTest} filters={filters}></SubTree>
               )
           ))}
         </ul>}
@@ -50,30 +50,35 @@ function ListSubGroup({ group, folded, onSelect, activeTest }: { group: Suite | 
 }
 
 
-function SubTree({ group, onSelect, activeTest }: { group: Suite, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
+function SubTree({ data, onSelect, activeTest, filters }: { data: Suite, onSelect: (test: Test | null) => void, activeTest: Test | null, filters: Status[] }) {
 
   const [folded, setFolded] = useState(true);
 
   const select = () => {
     setFolded(current => !current)
   }
+  const show =
+    filters.indexOf(Status.success) >= 0 && data.stats && data.stats.passedCount > 0
+    || filters.indexOf(Status.failed) >= 0 && data.stats && data.stats.failedCount > 0
+    || filters.indexOf(Status.skipped) >= 0 && data.stats && data.stats.skippedCount > 0
+
   return (
-    <li>
+    <li className={show ? '' : 'is-hidden'}>
       <a onClick={select}>
-        {group.tests &&
+        {data.tests &&
           <span className="icon">
             <i className={`${folded ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down'}`}></i>
           </span>
         }
-        <span className="ml-1">{group.name}</span>
+        <span className="ml-1">{data.name}</span>
       </a>
-      <ListSubGroup group={group} folded={folded} onSelect={onSelect} activeTest={activeTest}></ListSubGroup>
+      <ListSubGroup group={data} folded={folded} onSelect={onSelect} activeTest={activeTest} filters={filters}></ListSubGroup>
     </li>
   )
 }
 
 
-function TestRow({ data, onSelect, activeTest }: { data: Test, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
+function TestRow({ data, onSelect, activeTest, filters }: { data: Test, onSelect: (test: Test | null) => void, activeTest: Test | null, filters: Status[] }) {
   const select = () => {
     onSelect(data)
   }
@@ -83,8 +88,13 @@ function TestRow({ data, onSelect, activeTest }: { data: Test, onSelect: (test: 
       <span key={index} className={`tag ${status} light-color`}>{execution.name}</span>
     )
   })
+  const show =
+    filters.indexOf(Status.success) >= 0 && data.stats.passedCount > 0
+    || filters.indexOf(Status.failed) >= 0 && data.stats.failedCount > 0
+    || filters.indexOf(Status.skipped) >= 0 && data.stats.skippedCount > 0
+
   return (
-    <li className="">
+    <li className={show ? '' : 'is-hidden'}>
       <a className={` ${activeTest?.name === data.name ? 'is-active' : ''}`}
         onClick={select}>
         <div className="is-flex is-align-items-center" ><span>{data.name}</span>

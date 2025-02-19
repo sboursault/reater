@@ -1,10 +1,12 @@
 export interface Report {
     tests?: (Suite | Test)[]
+    stats?: Statistics
 }
 
 export interface Suite {
     name: string
     tests?: (Suite | Test)[]
+    stats?: Statistics
 }
 
 export interface Test {
