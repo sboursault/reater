@@ -11,6 +11,7 @@ export interface Test {
     name: string
     steps?: string[]
     executions: Execution[]
+    stats: Statistics
 }
 
 export interface Execution {
@@ -22,4 +23,10 @@ export enum Status {
     success,
     failed,
     skipped,
+}
+
+export class Statistics {
+    passedCount =0
+    failedCount = 0
+    skippedCount = 0
 }

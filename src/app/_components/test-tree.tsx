@@ -4,9 +4,28 @@ import { Suite, Report, Test, Status } from "../../types/report"
 
 export default function TestTree({ group, onSelect, activeTest }: { group: Report, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
   return (
-    <section className="menu">
-      <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTest={activeTest}></ListSubGroup>
-    </section>
+    <>
+      <div className="checkboxes">
+        <div className="field">
+          <input id="passedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined passed" defaultChecked />
+          <label htmlFor="passedFilter">Passed</label>
+        </div>
+
+        <div className="field">
+          <input id="failedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined failed" defaultChecked />
+          <label htmlFor="failedFilter">Failed</label>
+        </div>
+
+        <div className="field">
+          <input id="skippedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined skipped" defaultChecked />
+          <label htmlFor="skippedFilter">Skipped</label>
+        </div>
+      </div>
+
+      <section className="menu">
+        <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTest={activeTest}></ListSubGroup>
+      </section>
+    </>
   )
 }
 
@@ -54,7 +73,7 @@ function SubTree({ group, onSelect, activeTest }: { group: Suite, onSelect: (tes
 }
 
 
-function TestRow({ data, onSelect, activeTest }: { data: Test, onSelect: (test: Test | null) => void, activeTest: Test | null}) {
+function TestRow({ data, onSelect, activeTest }: { data: Test, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
   const select = () => {
     onSelect(data)
   }

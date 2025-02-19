@@ -1,10 +1,16 @@
+@use './variables' as v;
+
 @use 'bulma/sass' with (
     $strong-weight: 500,
     $menu-nested-list-margin: 0.75em 0 0.75em 0.75em,
-    $danger: #df5e46,
+    $danger: v.$danger,
     // https://mdigi.tools/color-shades/#dc4f35 (#dc4f35 is bootstrap's danger color)
-    $success: #2aaf48,
+    $success: v.$success,
     // https://mdigi.tools/color-shades/#28a745  (#dc4f35 is bootstrap's success color)
   );
 
 
+
+input[type='checkbox'] {
+  margin-right: 0.3em;
+}

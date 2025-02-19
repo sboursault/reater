@@ -22,7 +22,9 @@ export default function TestDetail({ data, onClose }: { data: Test, onClose: () 
         </ul>
       </div>
       <div className="block">
-
+        success : {data.stats.passedCount}<br/>
+        failed : {data.stats.failedCount}<br/>
+        skipped : {data.stats.skippedCount}<br/>
       </div>
     </article>
   )

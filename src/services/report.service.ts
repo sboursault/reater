@@ -1,4 +1,4 @@
-import { Report, Status, Test, Suite, Execution } from "@/types/report";
+import { Report, Status, Test, Suite, Execution, Statistics } from "@/types/report";
 import playwrightReport from "../../test-results-3-projects.json"
 import { PwReport, PwSpec, PwSuite } from "@/types/playwright-report";
 
@@ -6,10 +6,50 @@ import { PwReport, PwSpec, PwSuite } from "@/types/playwright-report";
 export function getFromReportFile(): Report {
     const source: PwReport = playwrightReport
 
+    const suite = convertSuiteArray(source.suites)
+    suite.forEach(
+        each => {
+            calculateStatistics(each)
+        }
+    )
     return {
-        tests: convertSuiteArray(source.suites)
+        tests: suite
     }
 }
+
+
+function calculateStatistics(suite: Suite | Test) {
+
+    if ('executions' in suite) {
+        suite.stats = calculateExecutionStatistics(suite.executions)
+    }
+
+    if ('tests' in suite) {
+        (suite.tests || []).forEach(
+            each => {
+                calculateStatistics(each)
+            }
+        )
+    }
+}
+
+
+function calculateExecutionStatistics(executions: Execution[]) {
+    let passedCount = 0;
+    let failedCount = 0;
+    let skippedCount = 0;
+    executions.forEach(each => {
+        if (each.status == Status.success) passedCount++
+        if (each.status == Status.failed) failedCount++
+        if (each.status == Status.skipped) skippedCount++
+    })
+    const result = new Statistics()
+    result.passedCount = passedCount
+    result.failedCount = failedCount
+    result.skippedCount = skippedCount
+    return result
+}
+
 
 function convertSuiteArray(source: PwSuite[]): (Suite | Test)[] {
     return source.map(suite => {
@@ -25,7 +65,7 @@ function convertPwSuite(source: PwSuite): Suite {
 
     return {
         name: buildGroupName(source),
-        tests: convertSuiteArray(source.suites || []).concat(convertSpecArray(source.specs))
+        tests: convertSuiteArray(source.suites || []).concat(convertSpecArray(source.specs)),
     }
 }
 
@@ -59,7 +99,8 @@ function convertSpecArray(source: PwSpec[]): Test[] {
         })
         target.push({
             name: group[0].title,
-            executions: executions
+            executions: executions,
+            stats: new Statistics()
         })
     })
     return target

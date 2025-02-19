@@ -19,7 +19,6 @@ export default function RootLayout({
           <div className="has-text-left">
             <ThemeSwitch></ThemeSwitch>
           </div>
-          {/*theme*/}
           {children}
         </ThemeProvider>
       </body>

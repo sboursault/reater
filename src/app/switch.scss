@@ -1,0 +1,42 @@
+.switch[type='checkbox'] + label,
+.switch[type='checkbox'].is-small + label {
+  padding-top: 0;
+}
+
+[data-theme='light'] {
+  --system-color-successBold: var(--bulma-success-40);
+  --system-color-dangerBold: var(--bulma-danger-40);
+  --system-color-textBold: var(--bulma-text-40);
+}
+[data-theme='dark'] {
+  --system-color-successBold: var(--bulma-success-60);
+  --system-color-dangerBold: var(--bulma-danger-60);
+  --system-color-textBold: var(--bulma-text-60);
+}
+
+.switch[type='checkbox'].is-outlined {
+  &.passed:checked {
+    + label:before {
+      border-color: var(--system-color-successBold);
+    }
+    + label:after {
+      background: var(--system-color-successBold);
+    }
+  }
+  &.failed:checked {
+    + label:before {
+      border-color: var(--system-color-dangerBold);
+    }
+    + label:after {
+      background: var(--system-color-dangerBold);
+    }
+  }
+  &.skipped:checked {
+    + label:before {
+      border-color: var(--system-color-textBold);
+    }
+    + label:after {
+      background: var(--system-color-textBold);
+    }
+  }
+}
