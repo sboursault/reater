@@ -1,21 +1,25 @@
 import { Report, Status, Test, Suite, Execution, Statistics } from "@/types/report";
 import playwrightReport from "../../test-results-3-projects.json"
 import { PwReport, PwSpec, PwSuite } from "@/types/playwright-report";
-
+import { v4 as uuidv4 } from 'uuid';
 
 export function getFromReportFile(): Report {
     const source: PwReport = playwrightReport
 
     const suite = convertSuiteArray(source.suites)
-    const report: Report =  {
-        tests: suite
+    const report: Report = {
+        tests: {
+            uuid: uuidv4(),
+            name: '',
+            tests: suite
+        }
     }
-    report.stats = calculateSuiteStatistics(report)
+    report.tests.stats = calculateSuiteStatistics(report.tests)
     return report
 }
 
 
-function calculateSuiteStatistics(suite: Report | Suite | Test) {
+function calculateSuiteStatistics(suite: Suite | Test) {
 
     if ('executions' in suite) {
         return calculateTestStatistics(suite)
@@ -64,6 +68,7 @@ function convertPwSuite(source: PwSuite): Suite {
         source = source.suites[0]
 
     return {
+        uuid: uuidv4(),
         name: buildGroupName(source),
         tests: convertSuiteArray(source.suites || []).concat(convertSpecArray(source.specs)),
     }
@@ -106,8 +111,10 @@ function convertSpecArray(source: PwSpec[]): Test[] {
     return target
 }
 
-export function getDummyReport(): Report {
+export function getDummyReport(): Suite {
     return {
+        name: "",
+        uuid: uuidv4(),
         tests: [
             {
                 name: "Test 1",
@@ -129,6 +136,7 @@ export function getDummyReport(): Report {
             },
             {
                 name: "Group 2",
+                uuid: uuidv4(),
                 tests: [
                     {
                         name: "Test 2-1",
@@ -146,6 +154,7 @@ export function getDummyReport(): Report {
                     },
                     {
                         name: "Group 2-2",
+                        uuid: uuidv4(),
                         tests: [
                             {
                                 name: "Test 2-2-1",
@@ -177,6 +186,7 @@ export function getDummyReport(): Report {
                             },
                             {
                                 name: "Group 2-2-3",
+                                uuid: uuidv4(),
                                 tests: [
                                     {
                                         name: "Test 2-2-3-1",
@@ -208,6 +218,7 @@ export function getDummyReport(): Report {
                                     },
                                     {
                                         name: "Group 2-2-3-3",
+                                        uuid: uuidv4(),
                                         tests: [
                                             {
                                                 name: "Test 2-2-3-3-1",
@@ -275,6 +286,7 @@ export function getDummyReport(): Report {
             },
             {
                 name: "Group 3",
+                uuid: uuidv4(),
                 tests: [
                     {
                         name: "Test 3-1",

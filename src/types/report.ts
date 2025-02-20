@@ -1,9 +1,10 @@
+
 export interface Report {
-    tests?: (Suite | Test)[]
-    stats?: Statistics
+    tests: Suite
 }
 
 export interface Suite {
+    uuid: string
     name: string
     tests?: (Suite | Test)[]
     stats?: Statistics
@@ -13,7 +14,7 @@ export interface Test {
     name: string
     steps?: string[]
     executions: Execution[]
-    stats: Statistics
+    stats?: Statistics
 }
 
 export interface Execution {

@@ -2,46 +2,106 @@
 import { ReactNode, useState } from "react"
 import { Suite, Report, Test, Status } from "../../types/report"
 
-export default function TestTree({ group, onSelect, activeTest }: { group: Report, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
+export default function TestTree({ report, onSelect, activeTest }: { report: Report, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
+  const [filters, setFilters] = useState<Status[]>([Status.success, Status.failed, Status.skipped])
+  const [expandedSuites, setExpandedSuites] = useState<string[]>([report.tests.uuid])
+
+  const expandCollapaseSuite = (suite: Suite) => {
+    if (expandedSuites.indexOf(suite.uuid) == -1)
+      setExpandedSuites(expandedSuites.concat(suite.uuid))
+    else
+      setExpandedSuites(expandedSuites.filter(each => each !== suite.uuid))
+  }
+
+  const toggleFilters = (status: Status) => {
+    if (filters.indexOf(status) == -1) {
+      setFilters(filters.concat([status]))
+    } else {
+      setFilters(filters.filter(obj => obj !== status))
+    }
+  }
+
+  const togglePassedFilter = () => {
+    toggleFilters(Status.success)
+  }
+
+  const toggleFailedFilter = () => {
+    toggleFilters(Status.failed)
+  }
+
+  const toggleSkippedFilter = () => {
+    toggleFilters(Status.skipped)
+  }
   return (
     <>
       <div className="checkboxes">
-        <div className="field">
-          <input id="passedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined passed" defaultChecked />
+
+        <a className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
+          <span className="icon">
+            <i className="fa-solid fa-compress"></i>
+          </span> <span className="is-size-7 ml-1"> Collapse all</span>
+        </a>
+        <a className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
+          <span className="icon">
+            <i className="fa-solid fa-expand"></i>
+          </span><span className="is-size-7 ml-1"> Expand all</span>
+        </a>
+
+        <div className="ml-1 field">
+          <input id="passedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined passed" onChange={togglePassedFilter} checked={filters.indexOf(Status.success) > -1} />
           <label htmlFor="passedFilter">Passed</label>
         </div>
 
         <div className="field">
-          <input id="failedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined failed" defaultChecked />
+          <input id="failedFilter"
+            type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined failed" onChange={toggleFailedFilter} checked={filters.indexOf(Status.failed) > -1} />
           <label htmlFor="failedFilter">Failed</label>
         </div>
 
         <div className="field">
-          <input id="skippedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined skipped" defaultChecked />
+          <input id="skippedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined skipped" onChange={toggleSkippedFilter} checked={filters.indexOf(Status.skipped) > -1} />
           <label htmlFor="skippedFilter">Skipped</label>
         </div>
+
       </div>
 
       <section className="menu">
-        <ListSubGroup folded={false} group={group} onSelect={onSelect} activeTest={activeTest} filters={[Status.success, Status.failed, Status.skipped]}></ListSubGroup>
+        <ListSubGroup
+          data={report.tests}
+          expandedSuites={expandedSuites}
+          onSelect={onSelect}
+          expandCollapaseSuite={expandCollapaseSuite}
+          activeTest={activeTest}
+          filters={filters}>
+        </ListSubGroup>
       </section>
     </>
   )
 }
 
-function ListSubGroup({ group, folded, onSelect, activeTest, filters }: { group: Suite | Report, folded: boolean, onSelect: (test: Test | null) => void, activeTest: Test | null, filters: Status[] }): ReactNode {
+function ListSubGroup(
+  { data, expandedSuites, onSelect, expandCollapaseSuite, activeTest, filters }: {
+    data: Suite,
+    expandedSuites: string[],
+    onSelect: (test: Test | null) => void,
+    expandCollapaseSuite: (suite: Suite) => void,
+    activeTest: Test | null,
+    filters: Status[]
+  }): ReactNode {
+
+  const folded = expandedSuites.indexOf(data.uuid) === -1
   return (
     <>
-      {group.tests &&
+      {data.tests &&
         <ul className={`menu-list ${folded ? 'is-hidden' : ''}`}>
-          {(group.tests || []).map((subGroup, index) => (
+          {(data.tests || []).map((subGroup, index) => (
             'executions' in subGroup ?
               (
                 <TestRow key={index} data={subGroup} onSelect={onSelect} activeTest={activeTest} filters={filters}></TestRow>
               )
               :
               (
-                <SubTree key={index} data={subGroup} onSelect={onSelect} activeTest={activeTest} filters={filters}></SubTree>
+                <SubTree key={index} expandedSuites={expandedSuites} data={subGroup} onSelect={onSelect} expandCollapaseSuite={expandCollapaseSuite} activeTest={activeTest} filters={filters}></SubTree>
               )
           ))}
         </ul>}
@@ -50,12 +110,20 @@ function ListSubGroup({ group, folded, onSelect, activeTest, filters }: { group:
 }
 
 
-function SubTree({ data, onSelect, activeTest, filters }: { data: Suite, onSelect: (test: Test | null) => void, activeTest: Test | null, filters: Status[] }) {
+function SubTree({ data, expandedSuites, onSelect, expandCollapaseSuite, activeTest, filters }:
+  {
+    data: Suite,
+    expandedSuites: string[],
+    onSelect: (test: Test | null) => void,
+    expandCollapaseSuite: (suite: Suite) => void,
+    activeTest: Test | null,
+    filters: Status[]
+  }) {
 
-  const [folded, setFolded] = useState(true);
+  const folded = expandedSuites.indexOf(data.uuid) === -1
 
-  const select = () => {
-    setFolded(current => !current)
+  const onClick = () => {
+    expandCollapaseSuite(data)
   }
   const show =
     filters.indexOf(Status.success) >= 0 && data.stats && data.stats.passedCount > 0
@@ -64,7 +132,7 @@ function SubTree({ data, onSelect, activeTest, filters }: { data: Suite, onSelec
 
   return (
     <li className={show ? '' : 'is-hidden'}>
-      <a onClick={select}>
+      <a onClick={onClick}>
         {data.tests &&
           <span className="icon">
             <i className={`${folded ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down'}`}></i>
@@ -72,7 +140,13 @@ function SubTree({ data, onSelect, activeTest, filters }: { data: Suite, onSelec
         }
         <span className="ml-1">{data.name}</span>
       </a>
-      <ListSubGroup group={data} folded={folded} onSelect={onSelect} activeTest={activeTest} filters={filters}></ListSubGroup>
+      <ListSubGroup data={data}
+        expandedSuites={expandedSuites}
+        onSelect={onSelect}
+        expandCollapaseSuite={expandCollapaseSuite}
+        activeTest={activeTest}
+        filters={filters}>
+      </ListSubGroup>
     </li>
   )
 }
@@ -88,10 +162,11 @@ function TestRow({ data, onSelect, activeTest, filters }: { data: Test, onSelect
       <span key={index} className={`tag ${status} light-color`}>{execution.name}</span>
     )
   })
+
   const show =
-    filters.indexOf(Status.success) >= 0 && data.stats.passedCount > 0
-    || filters.indexOf(Status.failed) >= 0 && data.stats.failedCount > 0
-    || filters.indexOf(Status.skipped) >= 0 && data.stats.skippedCount > 0
+    filters.indexOf(Status.success) >= 0 && data.stats && data.stats.passedCount > 0
+    || filters.indexOf(Status.failed) >= 0 && data.stats && data.stats.failedCount > 0
+    || filters.indexOf(Status.skipped) >= 0 && data.stats && data.stats.skippedCount > 0
 
   return (
     <li className={show ? '' : 'is-hidden'}>
