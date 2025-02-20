@@ -19,6 +19,25 @@ export default function TestTree({ report, onSelect, activeTest }: { report: Rep
     } else {
       setFilters(filters.filter(obj => obj !== status))
     }
+    expandAll()
+  }
+
+  const collapseAll = () => {
+    setExpandedSuites([report.tests.uuid])
+  }
+
+  const expandAll = () => {
+    const suiteUuids: string[] = []
+    function gatherUuids(suite: Suite) {
+      (suite.tests || []).forEach(each => {
+        if ('uuid' in each) {
+          suiteUuids.push(each.uuid)
+          gatherUuids(each)
+        }
+      });
+    }
+    gatherUuids(report.tests)
+    setExpandedSuites(suiteUuids.concat([report.tests.uuid]))
   }
 
   const togglePassedFilter = () => {
@@ -36,12 +55,12 @@ export default function TestTree({ report, onSelect, activeTest }: { report: Rep
     <>
       <div className="checkboxes">
 
-        <a className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
+        <a onClick={collapseAll} className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
           <span className="icon">
             <i className="fa-solid fa-compress"></i>
           </span> <span className="is-size-7 ml-1"> Collapse all</span>
         </a>
-        <a className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
+        <a onClick={expandAll} className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
           <span className="icon">
             <i className="fa-solid fa-expand"></i>
           </span><span className="is-size-7 ml-1"> Expand all</span>
