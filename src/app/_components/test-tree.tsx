@@ -1,6 +1,8 @@
 "use client"
 import { ReactNode, useState } from "react"
 import { Suite, Report, Test, Status } from "../../types/report"
+import { TestTreeNavLink } from "./test-tree-nav-link"
+import { TestTreeNavStatusSwitch } from "./test-tree-nav-status-switch"
 
 export default function TestTree({ report, onSelect, activeTest }: { report: Report, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
   const [filters, setFilters] = useState<Status[]>([Status.success, Status.failed, Status.skipped])
@@ -40,48 +42,30 @@ export default function TestTree({ report, onSelect, activeTest }: { report: Rep
     setExpandedSuites(suiteUuids.concat([report.tests.uuid]))
   }
 
-  const togglePassedFilter = () => {
-    toggleFilters(Status.success)
-  }
-
-  const toggleFailedFilter = () => {
-    toggleFilters(Status.failed)
-  }
-
-  const toggleSkippedFilter = () => {
-    toggleFilters(Status.skipped)
-  }
   return (
     <>
       <div className="checkboxes">
 
-        <a onClick={collapseAll} className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
-          <span className="icon">
-            <i className="fa-solid fa-compress"></i>
-          </span> <span className="is-size-7 ml-1"> Collapse all</span>
-        </a>
-        <a onClick={expandAll} className="field has-text-current" style={{ display: 'flex', alignItems: 'center' }}>
-          <span className="icon">
-            <i className="fa-solid fa-expand"></i>
-          </span><span className="is-size-7 ml-1"> Expand all</span>
-        </a>
+        <TestTreeNavLink onClick={collapseAll} icon="fa-solid fa-compress" >Collapse All</TestTreeNavLink>
+        <TestTreeNavLink onClick={expandAll} icon="fa-solid fa-expand" >Expand All</TestTreeNavLink>
 
-        <div className="ml-1 field">
-          <input id="passedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined passed" onChange={togglePassedFilter} checked={filters.indexOf(Status.success) > -1} />
-          <label htmlFor="passedFilter">Passed</label>
+        <div className="ml-1 checkboxes">
+          <TestTreeNavStatusSwitch
+            status={Status.success}
+            filters={filters}
+            toggleFilters={toggleFilters}>
+          </TestTreeNavStatusSwitch>
+          <TestTreeNavStatusSwitch
+            status={Status.failed}
+            filters={filters}
+            toggleFilters={toggleFilters}>
+          </TestTreeNavStatusSwitch>
+          <TestTreeNavStatusSwitch
+            status={Status.skipped}
+            filters={filters}
+            toggleFilters={toggleFilters}>
+          </TestTreeNavStatusSwitch>
         </div>
-
-        <div className="field">
-          <input id="failedFilter"
-            type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined failed" onChange={toggleFailedFilter} checked={filters.indexOf(Status.failed) > -1} />
-          <label htmlFor="failedFilter">Failed</label>
-        </div>
-
-        <div className="field">
-          <input id="skippedFilter" type="checkbox" name="switchRoundedDefault" className="switch is-small is-rounded is-outlined skipped" onChange={toggleSkippedFilter} checked={filters.indexOf(Status.skipped) > -1} />
-          <label htmlFor="skippedFilter">Skipped</label>
-        </div>
-
       </div>
 
       <section className="menu">
@@ -98,8 +82,15 @@ export default function TestTree({ report, onSelect, activeTest }: { report: Rep
   )
 }
 
+
 function ListSubGroup(
-  { data, expandedSuites, onSelect, expandCollapaseSuite, activeTest, filters }: {
+  { data,
+    expandedSuites,
+    onSelect,
+    expandCollapaseSuite,
+    activeTest,
+    filters
+  }: {
     data: Suite,
     expandedSuites: string[],
     onSelect: (test: Test | null) => void,
