@@ -81,20 +81,20 @@ export interface PwTest {
   //expectedStatus: string
   //projectId: string
   projectName: string
-  //results: Result[]
+  results: Result[]
   //status: string
 }
 
 export interface Result {
   workerIndex: number
-  status: string
-  duration: number
-  errors: Error[]
-  stdout: any[]
-  stderr: any[]
-  retry: number
-  startTime: string
-  attachments: Attachment[]
+  //status: string
+  //duration: number
+  //errors: Error[]
+  //stdout: any[]
+  //stderr: any[]
+  //retry: number
+  //startTime: string
+  //attachments: Attachment[]
   error?: Error
 }
 

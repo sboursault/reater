@@ -17,14 +17,14 @@ export default function Home() {
 function HomeMain({ report }: { report: Report}) {
   const [activeTest, setActiveTest] = useState<Test | null>(null);
   const [showTestDetail, setShowTestDetail] = useState(false);
-  const onSelect = (test: Test | null) => {
+  const selectTest = (test: Test | null) => {
     if (test) setShowTestDetail(true)
     else setTimeout(                       // setTimeout avoids flickering
       () => setShowTestDetail(false), 200  // when the detail disapears
     )
     setActiveTest(test);
   }
-  const deActivate: () => void = () => onSelect(null);
+  const deactivateTest: () => void = () => selectTest(null);
 
   return (
     <div className="container">
@@ -37,11 +37,11 @@ function HomeMain({ report }: { report: Report}) {
 
       <div className="columns">
         <div className="column">
-          <TestTree report={report} onSelect={onSelect} activeTest={activeTest}></TestTree>
+          <TestTree report={report} selectTest={selectTest} activeTest={activeTest}></TestTree>
         </div>
-        <div className={`column ${!showTestDetail ? 'is-hidden' : ''}`}>
+        <div className={`column is-half ${!showTestDetail ? 'is-hidden' : ''}`}>
           {activeTest
-            && <TestDetail data={activeTest} onClose={deActivate}></TestDetail>}
+            && <TestDetail key={activeTest.uuid} data={activeTest} deactivateTest={deactivateTest}></TestDetail>}
         </div>
       </div>
 

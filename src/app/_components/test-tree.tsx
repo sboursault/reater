@@ -4,7 +4,7 @@ import { Suite, Report, Test, Status } from "../../types/report"
 import { TestTreeNavLink } from "./test-tree-nav-link"
 import { TestTreeNavStatusSwitch } from "./test-tree-nav-status-switch"
 
-export default function TestTree({ report, onSelect, activeTest }: { report: Report, onSelect: (test: Test | null) => void, activeTest: Test | null }) {
+export default function TestTree({ report, selectTest, activeTest }: { report: Report, selectTest: (test: Test | null) => void, activeTest: Test | null }) {
   const [filters, setFilters] = useState<Status[]>([Status.success, Status.failed, Status.skipped])
   const [expandedSuites, setExpandedSuites] = useState<string[]>([report.tests.uuid])
 
@@ -72,7 +72,7 @@ export default function TestTree({ report, onSelect, activeTest }: { report: Rep
         <ListSubGroup
           data={report.tests}
           expandedSuites={expandedSuites}
-          onSelect={onSelect}
+          selectTest={selectTest}
           expandCollapaseSuite={expandCollapaseSuite}
           activeTest={activeTest}
           filters={filters}>
@@ -86,14 +86,14 @@ export default function TestTree({ report, onSelect, activeTest }: { report: Rep
 function ListSubGroup(
   { data,
     expandedSuites,
-    onSelect,
+    selectTest,
     expandCollapaseSuite,
     activeTest,
     filters
   }: {
     data: Suite,
     expandedSuites: string[],
-    onSelect: (test: Test | null) => void,
+    selectTest: (test: Test | null) => void,
     expandCollapaseSuite: (suite: Suite) => void,
     activeTest: Test | null,
     filters: Status[]
@@ -107,11 +107,11 @@ function ListSubGroup(
           {(data.tests || []).map((subGroup, index) => (
             'executions' in subGroup ?
               (
-                <TestRow key={index} data={subGroup} onSelect={onSelect} activeTest={activeTest} filters={filters}></TestRow>
+                <TestRow key={index} data={subGroup} selectTest={selectTest} activeTest={activeTest} filters={filters}></TestRow>
               )
               :
               (
-                <SubTree key={index} expandedSuites={expandedSuites} data={subGroup} onSelect={onSelect} expandCollapaseSuite={expandCollapaseSuite} activeTest={activeTest} filters={filters}></SubTree>
+                <SubTree key={index} expandedSuites={expandedSuites} data={subGroup} selectTest={selectTest} expandCollapaseSuite={expandCollapaseSuite} activeTest={activeTest} filters={filters}></SubTree>
               )
           ))}
         </ul>}
@@ -120,15 +120,22 @@ function ListSubGroup(
 }
 
 
-function SubTree({ data, expandedSuites, onSelect, expandCollapaseSuite, activeTest, filters }:
-  {
-    data: Suite,
-    expandedSuites: string[],
-    onSelect: (test: Test | null) => void,
-    expandCollapaseSuite: (suite: Suite) => void,
-    activeTest: Test | null,
-    filters: Status[]
-  }) {
+function SubTree(
+  { data,
+    expandedSuites,
+    selectTest,
+    expandCollapaseSuite,
+    activeTest,
+    filters
+  }:
+    {
+      data: Suite,
+      expandedSuites: string[],
+      selectTest: (test: Test | null) => void,
+      expandCollapaseSuite: (suite: Suite) => void,
+      activeTest: Test | null,
+      filters: Status[]
+    }) {
 
   const folded = expandedSuites.indexOf(data.uuid) === -1
 
@@ -152,7 +159,7 @@ function SubTree({ data, expandedSuites, onSelect, expandCollapaseSuite, activeT
       </a>
       <ListSubGroup data={data}
         expandedSuites={expandedSuites}
-        onSelect={onSelect}
+        selectTest={selectTest}
         expandCollapaseSuite={expandCollapaseSuite}
         activeTest={activeTest}
         filters={filters}>
@@ -162,9 +169,9 @@ function SubTree({ data, expandedSuites, onSelect, expandCollapaseSuite, activeT
 }
 
 
-function TestRow({ data, onSelect, activeTest, filters }: { data: Test, onSelect: (test: Test | null) => void, activeTest: Test | null, filters: Status[] }) {
+function TestRow({ data, selectTest, activeTest, filters }: { data: Test, selectTest: (test: Test | null) => void, activeTest: Test | null, filters: Status[] }) {
   const select = () => {
-    onSelect(data)
+    selectTest(data)
   }
   const tags = data.executions.map((execution, index) => {
     const status = execution.status == Status.success ? 'has-text-success-soft-invert has-background-success-soft' : execution.status == Status.failed ? 'has-text-danger-soft-invert has-background-danger-soft' : 'is-dark'

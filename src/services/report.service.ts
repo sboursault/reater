@@ -97,17 +97,21 @@ function convertSpecArray(source: PwSpec[]): Test[] {
 
     groupByFileAndLine.forEach((group) => {
         const executions: Execution[] = group.map(spec => {
+            const error = spec.tests[0]?.results[0]?.error
             return {
                 name: spec.tests[0].projectName,
-                status: spec.ok ? Status.success : Status.failed
+                status: spec.ok ? Status.success : Status.failed,
+                error
             }
         })
         target.push({
             name: group[0].title,
+            uuid: uuidv4(),
             executions: executions,
             stats: new Statistics()
         })
     })
+    
     return target
 }
 
@@ -118,6 +122,7 @@ export function getDummyReport(): Suite {
         tests: [
             {
                 name: "Test 1",
+                uuid: uuidv4(),
                 executions: [
                     {
                         name: "chromium",
@@ -140,6 +145,7 @@ export function getDummyReport(): Suite {
                 tests: [
                     {
                         name: "Test 2-1",
+                        uuid: uuidv4(),
                         executions: [
                             {
                                 name: "chromium",
@@ -158,6 +164,7 @@ export function getDummyReport(): Suite {
                         tests: [
                             {
                                 name: "Test 2-2-1",
+                                uuid: uuidv4(),
                                 executions: [
                                     {
                                         name: "chromium",
@@ -172,6 +179,7 @@ export function getDummyReport(): Suite {
                             },
                             {
                                 name: "Test 2-2-2",
+                                uuid: uuidv4(),
                                 executions: [
                                     {
                                         name: "chromium",
@@ -190,6 +198,7 @@ export function getDummyReport(): Suite {
                                 tests: [
                                     {
                                         name: "Test 2-2-3-1",
+                                        uuid: uuidv4(),
                                         executions: [
                                             {
                                                 name: "chromium",
@@ -204,6 +213,7 @@ export function getDummyReport(): Suite {
                                     },
                                     {
                                         name: "Test 2-2-3-2",
+                                        uuid: uuidv4(),
                                         executions: [
                                             {
                                                 name: "chromium",
@@ -222,6 +232,7 @@ export function getDummyReport(): Suite {
                                         tests: [
                                             {
                                                 name: "Test 2-2-3-3-1",
+                                                uuid: uuidv4(),
                                                 executions: [
                                                     {
                                                         name: "chromium",
@@ -236,6 +247,7 @@ export function getDummyReport(): Suite {
                                             },
                                             {
                                                 name: "Test 2-2-3-3-2",
+                                                uuid: uuidv4(),
                                                 executions: [
                                                     {
                                                         name: "chromium",
@@ -250,6 +262,7 @@ export function getDummyReport(): Suite {
                                             },
                                             {
                                                 name: "Test 2-2-3-3-3",
+                                                uuid: uuidv4(),
                                                 executions: [
                                                     {
                                                         name: "chromium",
@@ -270,6 +283,7 @@ export function getDummyReport(): Suite {
                     },
                     {
                         name: "Test 2-3",
+                        uuid: uuidv4(),
                         executions: [
                             {
                                 name: "chromium",
@@ -290,6 +304,7 @@ export function getDummyReport(): Suite {
                 tests: [
                     {
                         name: "Test 3-1",
+                        uuid: uuidv4(),
                         executions: [
                             {
                                 name: "chromium",
@@ -304,6 +319,7 @@ export function getDummyReport(): Suite {
                     },
                     {
                         name: "Test 3-3",
+                        uuid: uuidv4(),
                         executions: [
                             {
                                 name: "chromium",
@@ -320,6 +336,7 @@ export function getDummyReport(): Suite {
             },
             {
                 name: "Test 4",
+                uuid: uuidv4(),
                 executions: [
                     {
                         name: "chromium",
