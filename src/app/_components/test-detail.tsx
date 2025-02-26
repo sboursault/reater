@@ -78,10 +78,18 @@ export function ExecutionDetail({
   return (
     <div className="content">
       {data.error &&
-        <div className="field">
-          <p><strong>Console log</strong></p>
-          <ConsoleLog data={data.error?.message}></ConsoleLog>
-        </div>
+        <>
+          <div className="field">
+            <p><strong>Error</strong></p>
+            <ConsoleLog data={data.error?.message}></ConsoleLog>
+          </div>
+          {data.error.message !== data.error.stack &&
+            <div className="field">
+              <p><strong>Log</strong></p>
+              <ConsoleLog data={data.error?.stack}></ConsoleLog>
+            </div>
+          }
+        </>
       }
     </div>
   )

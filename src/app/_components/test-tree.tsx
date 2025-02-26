@@ -44,27 +44,46 @@ export default function TestTree({ report, selectTest, activeTest }: { report: R
 
   return (
     <>
-      <div className="checkboxes">
+      <div className="mb-2 checkboxes is-align-items-center">
 
-        <TestTreeNavLink onClick={collapseAll} icon="fa-solid fa-compress" >Collapse All</TestTreeNavLink>
-        <TestTreeNavLink onClick={expandAll} icon="fa-solid fa-expand" >Expand All</TestTreeNavLink>
+        <div className="ml-1">
+          <p className="control has-icons-left has-icons-right">
+            <input className="input is-expanded" type="text" placeholder="Search..."
+            style={{width: '17em'}} />
+            <span className="icon is-small is-left">
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </span>
+          </p>
+        </div>
 
-        <div className="ml-1 checkboxes">
-          <TestTreeNavStatusSwitch
-            status={Status.success}
-            filters={filters}
-            toggleFilters={toggleFilters}>
-          </TestTreeNavStatusSwitch>
-          <TestTreeNavStatusSwitch
-            status={Status.failed}
-            filters={filters}
-            toggleFilters={toggleFilters}>
-          </TestTreeNavStatusSwitch>
-          <TestTreeNavStatusSwitch
-            status={Status.skipped}
-            filters={filters}
-            toggleFilters={toggleFilters}>
-          </TestTreeNavStatusSwitch>
+        <TestTreeNavStatusSwitch
+          status={Status.success}
+          filters={filters}
+          className="ml-2"
+          toggleFilters={toggleFilters}>
+        </TestTreeNavStatusSwitch>
+        <TestTreeNavStatusSwitch
+          status={Status.failed}
+          filters={filters}
+          toggleFilters={toggleFilters}>
+        </TestTreeNavStatusSwitch>
+        <TestTreeNavStatusSwitch
+          status={Status.skipped}
+          filters={filters}
+          toggleFilters={toggleFilters}>
+        </TestTreeNavStatusSwitch>
+
+        <div className="is-flex">
+          <TestTreeNavLink
+            icon="fa-solid fa-compress"
+            onClick={collapseAll}
+            tooltipText="Collapse All" />
+          <TestTreeNavLink
+            icon="fa-solid fa-expand"
+            className="ml-1"
+            onClick={expandAll}
+            tooltipText="Expand All" />
+
         </div>
       </div>
 

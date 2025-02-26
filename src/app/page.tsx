@@ -2,6 +2,7 @@
 import './ubiquity.scss'
 import 'bulma-switch'
 import './switch.scss'
+import 'bulma-tooltip'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import TestTree from "./_components/test-tree";
 import { getFromReportFile } from "@/services/report.service";
