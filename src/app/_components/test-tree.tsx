@@ -11,11 +11,11 @@ type TestFilter = {
 
 export default function TestTree({
   report,
-  selectTest,
+  onSelectTest,
   activeTest
 }: {
   report: Report,
-  selectTest: (test: Test | null) => void,
+  onSelectTest: (test: Test) => void,
   activeTest: Test | null
 }) {
   const [filter, setFilter] = useState<TestFilter>({
@@ -41,6 +41,7 @@ export default function TestTree({
     setFilter({
       status: filter.status, text
     })
+    expandAll()
   }
 
   const toggleFilters = (status: Status) => {
@@ -114,21 +115,20 @@ export default function TestTree({
       </div>
 
       <section className="menu">
-        <ListSubGroup
+        <SuiteLeaves
           data={report.tests}
           expandedSuites={expandedSuites}
-          onSelectTest={selectTest}
+          onSelectTest={onSelectTest}
           expandCollapaseSuite={expandCollapaseSuite}
           activeTest={activeTest}
-          filter={filter}>
-        </ListSubGroup>
+          filter={filter} />
       </section>
     </>
   )
 }
 
 
-function ListSubGroup({
+function SuiteLeaves({
   data,
   expandedSuites,
   onSelectTest,
@@ -138,47 +138,12 @@ function ListSubGroup({
 }: {
   data: Suite,
   expandedSuites: string[],
-  onSelectTest: (test: Test | null) => void,
+  onSelectTest: (test: Test) => void,
   expandCollapaseSuite: (suite: Suite) => void,
   activeTest: Test | null,
   filter: TestFilter
 }): ReactNode {
 
-  const isCollapsed = expandedSuites.indexOf(data.uuid) === -1
-  return (
-    <>
-      {data.tests &&
-        <ul className={`menu-list ${isCollapsed ? 'is-hidden' : ''}`}>
-          {(data.tests || []).map((each, index) => (
-            <Node
-              key={index}
-              data={each}
-              expandedSuites={expandedSuites}
-              activeTest={activeTest}
-              onSelectTest={onSelectTest}
-              expandCollapaseSuite={expandCollapaseSuite}
-              filter={filter} />
-          ))}
-        </ul>}
-    </>
-  )
-}
-
-function Node({
-  data,
-  expandedSuites,
-  onSelectTest,
-  expandCollapaseSuite,
-  activeTest,
-  filter
-}: {
-  data: Suite | Test,
-  expandedSuites: string[],
-  onSelectTest: (test: Test | null) => void,
-  expandCollapaseSuite: (suite: Suite) => void,
-  activeTest: Test | null,
-  filter: TestFilter
-}) {
 
   const isVisibleTest = (test: Test) => {
     return (filter.status.indexOf(Status.success) >= 0 && test.stats != null && test.stats.passedCount > 0
@@ -190,7 +155,7 @@ function Node({
 
   const isVisibleSuite = (suite: Suite) => {
     const tests = suite.tests || []
-    for(let i = 0; i < tests.length; i++) {
+    for (let i = 0; i < tests.length; i++) {
       const each = tests[i]
       if ('executions' in each) {
         if (isVisibleTest(each)) return true
@@ -201,29 +166,43 @@ function Node({
     return false
   }
 
-  if ('executions' in data)
-    return (
-      <TestRow
-        data={data}
-        onSelectTest={onSelectTest}
-        isActive={activeTest?.name === data.name}
-        isVisible={isVisibleTest(data)} />
-    )
-  else
-    return (
-      <SubTree
-        expandedSuites={expandedSuites}
-        data={data}
-        onSelectTest={onSelectTest}
-        expandCollapaseSuite={expandCollapaseSuite}
-        activeTest={activeTest}
-        filter={filter} 
-        isVisible={isVisibleSuite(data)} />
-    )
+  const isCollapsed = expandedSuites.indexOf(data.uuid) === -1
+
+  return (
+    <>
+      {data.tests &&
+        <ul className={`menu-list ${isCollapsed ? 'is-hidden' : ''}`}>
+          {(data.tests || []).map((each, index) => {
+            return 'executions' in each ?
+              (
+                <TestRow
+                  key={index}
+                  data={each}
+                  onSelectTest={onSelectTest}
+                  isActive={activeTest?.name === data.name}
+                  isVisible={isVisibleTest(each)} />
+              )
+              :
+              (
+                <SuiteTree
+                  key={index}
+                  expandedSuites={expandedSuites}
+                  data={each}
+                  onSelectTest={onSelectTest}
+                  expandCollapaseSuite={expandCollapaseSuite}
+                  activeTest={activeTest}
+                  filter={filter}
+                  isVisible={isVisibleSuite(each)} />
+              )
+          })}
+        </ul>
+      }
+    </>
+  )
 }
 
 
-function SubTree(
+function SuiteTree(
   { data,
     expandedSuites,
     onSelectTest,
@@ -235,7 +214,7 @@ function SubTree(
     {
       data: Suite,
       expandedSuites: string[],
-      onSelectTest: (test: Test | null) => void,
+      onSelectTest: (test: Test) => void,
       expandCollapaseSuite: (suite: Suite) => void,
       activeTest: Test | null,
       filter: TestFilter
@@ -243,7 +222,6 @@ function SubTree(
     }) {
 
   const isCollapsed = expandedSuites.indexOf(data.uuid) === -1
-
 
   return (
     <li className={isVisible ? '' : 'is-hidden'}>
@@ -255,13 +233,12 @@ function SubTree(
         }
         <span className="ml-1">{data.name}</span>
       </a>
-      <ListSubGroup data={data}
+      <SuiteLeaves data={data}
         expandedSuites={expandedSuites}
         onSelectTest={onSelectTest}
         expandCollapaseSuite={expandCollapaseSuite}
         activeTest={activeTest}
-        filter={filter}>
-      </ListSubGroup>
+        filter={filter} />
     </li>
   )
 }
@@ -274,7 +251,7 @@ function TestRow({
   isVisible,
 }: {
   data: Test,
-  onSelectTest: (test: Test | null) => void,
+  onSelectTest: (test: Test) => void,
   isActive: boolean,
   isVisible: boolean,
 }) {
