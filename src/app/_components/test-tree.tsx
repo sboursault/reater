@@ -9,7 +9,15 @@ type TestFilter = {
   text: string,
 }
 
-export default function TestTree({ report, selectTest, activeTest }: { report: Report, selectTest: (test: Test | null) => void, activeTest: Test | null }) {
+export default function TestTree({
+  report,
+  selectTest,
+  activeTest
+}: {
+  report: Report,
+  selectTest: (test: Test | null) => void,
+  activeTest: Test | null
+}) {
   const [filter, setFilter] = useState<TestFilter>({
     status: [Status.success, Status.failed, Status.skipped],
     text: ''
@@ -82,18 +90,15 @@ export default function TestTree({ report, selectTest, activeTest }: { report: R
           status={Status.success}
           filters={filter.status}
           className="ml-2"
-          toggleFilters={toggleFilters}>
-        </TestTreeNavStatusSwitch>
+          toggleFilters={toggleFilters} />
         <TestTreeNavStatusSwitch
           status={Status.failed}
           filters={filter.status}
-          toggleFilters={toggleFilters}>
-        </TestTreeNavStatusSwitch>
+          toggleFilters={toggleFilters} />
         <TestTreeNavStatusSwitch
           status={Status.skipped}
           filters={filter.status}
-          toggleFilters={toggleFilters}>
-        </TestTreeNavStatusSwitch>
+          toggleFilters={toggleFilters} />
 
         <div className="is-flex">
           <TestTreeNavLink
@@ -112,7 +117,7 @@ export default function TestTree({ report, selectTest, activeTest }: { report: R
         <ListSubGroup
           data={report.tests}
           expandedSuites={expandedSuites}
-          selectTest={selectTest}
+          onSelectTest={selectTest}
           expandCollapaseSuite={expandCollapaseSuite}
           activeTest={activeTest}
           filter={filter}>
@@ -123,95 +128,136 @@ export default function TestTree({ report, selectTest, activeTest }: { report: R
 }
 
 
-function ListSubGroup(
-  { data,
-    expandedSuites,
-    selectTest,
-    expandCollapaseSuite,
-    activeTest,
-    filter
-  }: {
-    data: Suite,
-    expandedSuites: string[],
-    selectTest: (test: Test | null) => void,
-    expandCollapaseSuite: (suite: Suite) => void,
-    activeTest: Test | null,
-    filter: TestFilter
-  }): ReactNode {
+function ListSubGroup({
+  data,
+  expandedSuites,
+  onSelectTest,
+  expandCollapaseSuite,
+  activeTest,
+  filter
+}: {
+  data: Suite,
+  expandedSuites: string[],
+  onSelectTest: (test: Test | null) => void,
+  expandCollapaseSuite: (suite: Suite) => void,
+  activeTest: Test | null,
+  filter: TestFilter
+}): ReactNode {
 
-  const folded = expandedSuites.indexOf(data.uuid) === -1
+  const isCollapsed = expandedSuites.indexOf(data.uuid) === -1
   return (
     <>
       {data.tests &&
-        <ul className={`menu-list ${folded ? 'is-hidden' : ''}`}>
-          {(data.tests || []).map((subGroup, index) => (
-            'executions' in subGroup ?
-              (
-                <TestRow
-                  key={index}
-                  data={subGroup}
-                  selectTest={selectTest}
-                  activeTest={activeTest}
-                  filter={filter} />
-              )
-              :
-              (
-                <SubTree
-                  key={index}
-                  expandedSuites={expandedSuites}
-                  data={subGroup}
-                  selectTest={selectTest}
-                  expandCollapaseSuite={expandCollapaseSuite}
-                  activeTest={activeTest}
-                  filter={filter} />
-              )
+        <ul className={`menu-list ${isCollapsed ? 'is-hidden' : ''}`}>
+          {(data.tests || []).map((each, index) => (
+            <Node
+              key={index}
+              data={each}
+              expandedSuites={expandedSuites}
+              activeTest={activeTest}
+              onSelectTest={onSelectTest}
+              expandCollapaseSuite={expandCollapaseSuite}
+              filter={filter} />
           ))}
         </ul>}
     </>
   )
 }
 
+function Node({
+  data,
+  expandedSuites,
+  onSelectTest,
+  expandCollapaseSuite,
+  activeTest,
+  filter
+}: {
+  data: Suite | Test,
+  expandedSuites: string[],
+  onSelectTest: (test: Test | null) => void,
+  expandCollapaseSuite: (suite: Suite) => void,
+  activeTest: Test | null,
+  filter: TestFilter
+}) {
+
+  const isVisibleTest = (test: Test) => {
+    return (filter.status.indexOf(Status.success) >= 0 && test.stats != null && test.stats.passedCount > 0
+      || filter.status.indexOf(Status.failed) >= 0 && test.stats != null && test.stats.failedCount > 0
+      || filter.status.indexOf(Status.skipped) >= 0 && test.stats != null && test.stats.skippedCount > 0)
+      && (filter.text.length == 0
+        || test.name.toLowerCase().indexOf(filter.text.toLowerCase()) != -1)
+  }
+
+  const isVisibleSuite = (suite: Suite) => {
+    const tests = suite.tests || []
+    for(let i = 0; i < tests.length; i++) {
+      const each = tests[i]
+      if ('executions' in each) {
+        if (isVisibleTest(each)) return true
+      } else {
+        if (isVisibleSuite(each)) return true
+      }
+    }
+    return false
+  }
+
+  if ('executions' in data)
+    return (
+      <TestRow
+        data={data}
+        onSelectTest={onSelectTest}
+        isActive={activeTest?.name === data.name}
+        isVisible={isVisibleTest(data)} />
+    )
+  else
+    return (
+      <SubTree
+        expandedSuites={expandedSuites}
+        data={data}
+        onSelectTest={onSelectTest}
+        expandCollapaseSuite={expandCollapaseSuite}
+        activeTest={activeTest}
+        filter={filter} 
+        isVisible={isVisibleSuite(data)} />
+    )
+}
+
 
 function SubTree(
   { data,
     expandedSuites,
-    selectTest,
+    onSelectTest,
     expandCollapaseSuite,
     activeTest,
-    filter
+    filter,
+    isVisible
   }:
     {
       data: Suite,
       expandedSuites: string[],
-      selectTest: (test: Test | null) => void,
+      onSelectTest: (test: Test | null) => void,
       expandCollapaseSuite: (suite: Suite) => void,
       activeTest: Test | null,
       filter: TestFilter
+      isVisible: boolean,
     }) {
 
-  const folded = expandedSuites.indexOf(data.uuid) === -1
+  const isCollapsed = expandedSuites.indexOf(data.uuid) === -1
 
-  const onClick = () => {
-    expandCollapaseSuite(data)
-  }
-  const show =
-    filter.status.indexOf(Status.success) >= 0 && data.stats && data.stats.passedCount > 0
-    || filter.status.indexOf(Status.failed) >= 0 && data.stats && data.stats.failedCount > 0
-    || filter.status.indexOf(Status.skipped) >= 0 && data.stats && data.stats.skippedCount > 0
 
   return (
-    <li className={show ? '' : 'is-hidden'}>
-      <a onClick={onClick}>
+    <li className={isVisible ? '' : 'is-hidden'}>
+      <a onClick={() => expandCollapaseSuite(data)}>
         {data.tests &&
           <span className="icon">
-            <i className={`${folded ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down'}`}></i>
+            <i className={`${isCollapsed ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-down'}`}></i>
           </span>
         }
         <span className="ml-1">{data.name}</span>
       </a>
       <ListSubGroup data={data}
         expandedSuites={expandedSuites}
-        selectTest={selectTest}
+        onSelectTest={onSelectTest}
         expandCollapaseSuite={expandCollapaseSuite}
         activeTest={activeTest}
         filter={filter}>
@@ -223,19 +269,16 @@ function SubTree(
 
 function TestRow({
   data,
-  selectTest,
-  activeTest,
-  filter
+  onSelectTest,
+  isActive,
+  isVisible,
 }: {
   data: Test,
-  selectTest: (test: Test | null) => void,
-  activeTest: Test | null,
-  filter: TestFilter
+  onSelectTest: (test: Test | null) => void,
+  isActive: boolean,
+  isVisible: boolean,
 }) {
 
-  const select = () => {
-    selectTest(data)
-  }
   const tags = data.executions.map((execution, index) => {
     const status = execution.status == Status.success ? 'has-text-success-soft-invert has-background-success-soft' : execution.status == Status.failed ? 'has-text-danger-soft-invert has-background-danger-soft' : 'is-dark'
     return (
@@ -243,17 +286,14 @@ function TestRow({
     )
   })
 
-  const show =
-    (filter.status.indexOf(Status.success) >= 0 && data.stats && data.stats.passedCount > 0
-      || filter.status.indexOf(Status.failed) >= 0 && data.stats && data.stats.failedCount > 0
-      || filter.status.indexOf(Status.skipped) >= 0 && data.stats && data.stats.skippedCount > 0)
-    && (filter.text.length == 0 || data.name.toLowerCase().indexOf(filter.text.toLowerCase()) != -1)
-
   return (
-    <li className={show ? '' : 'is-hidden'}>
-      <a className={` ${activeTest?.name === data.name ? 'is-active' : ''}`}
-        onClick={select}>
-        <div className="is-flex is-align-items-center" ><span>{data.name}</span>
+    <li
+      className={isVisible ? '' : 'is-hidden'}>
+      <a
+        className={` ${isActive ? 'is-active' : ''}`}
+        onClick={() => onSelectTest(data)}>
+        <div className="is-flex is-align-items-center" >
+          <span>{data.name}</span>
           <div className="tags ml-3">
             {tags}
           </div>
@@ -262,3 +302,5 @@ function TestRow({
     </li>
   )
 }
+
+
