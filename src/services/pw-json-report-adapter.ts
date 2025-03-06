@@ -1,21 +1,52 @@
-import { PwReport, PwSpec, PwSuite } from "@/types/playwright-report"
-import { Execution, Report, Statistics, Status, Suite, Test } from "@/types/report"
+import { PwReport, PwSpec, PwSuite } from '@/types/playwright-report';
+import { Execution, Report, Statistics, Status, Suite, Test } from '@/types/report';
 
 import playwrightReport from '../../test-results-3-projects.json';
-import { newUuid } from "./uuid-factory";
+import { newUuid } from './uuid-factory';
 
 export function getFromReportFile(): Report {
-  return convertReport(playwrightReport)
+  return convertReport(playwrightReport);
 }
 
 export function convertReport(source: PwReport): Report {
-  const suite = convertSuiteArray(source.suites);
+  const fileResults = convertSuiteArray(source.suites);
+
+  // on passe sur tous les noeuds niveau 1
+  // et on les range dans un nouvel arbre
+
+  const structuredFiles: Suite = {
+    uuid: newUuid(),
+    name: '',
+    tests: [],
+  };
+
+  fileResults.forEach((fileResult) => {
+    const parts = fileResult.name.split('/');
+    let position = structuredFiles;
+    if (parts.length > 1) {
+      for (const each of parts.slice(0, -1)) {
+        let folder = position.tests?.find(
+          (element) => element.name.toLowerCase() === each.toLowerCase()
+        );
+        if (folder == null) {
+          folder = {
+            uuid: newUuid(),
+            name: capitalizeFirstLetter(each),
+            tests: [],
+          };
+          position.tests?.push(folder);
+        }
+        position = folder;
+      }
+    }
+    position.tests?.push({
+      ...fileResult,
+      name: capitalizeFirstLetter(fileResult.name.substring(fileResult.name.lastIndexOf('/') + 1)),
+    });
+  });
+
   const report: Report = {
-    tests: {
-      uuid: newUuid(),
-      name: '',
-      tests: suite,
-    },
+    tests: structuredFiles,
   };
   return report;
 }
@@ -27,6 +58,7 @@ function convertSuiteArray(source: PwSuite[]): (Suite | Test)[] {
 }
 
 function convertPwSuite(source: PwSuite): Suite {
+  // when a test file contains a single top level 'describe', we skip the file node
   if (source.title == source.file && source.suites?.length == 1) source = source.suites[0];
 
   return {
