@@ -9,37 +9,36 @@ export function getFromReportFile(): Report {
 }
 
 export function convertReport(source: PwReport): Report {
-  const fileResults = convertSuiteArray(source.suites);
+  const specFileReports = convertSuiteArray(source.suites);
+  return groupSpecFileReportsByFolders(specFileReports);
+}
 
-  // on passe sur tous les noeuds niveau 1
-  // et on les range dans un nouvel arbre
-
+function groupSpecFileReportsByFolders(specFileReports: (Suite | Test)[]) {
   const structuredFiles: Suite = {
     uuid: newUuid(),
     name: '',
     tests: [],
   };
-
-  fileResults.forEach((fileResult) => {
-    const parts = fileResult.name.split('/');
-    let position = structuredFiles;
-    if (parts.length > 1) {
-      for (const each of parts.slice(0, -1)) {
-        let folder = position.tests?.find(
-          (element) => element.name.toLowerCase() === each.toLowerCase()
+  specFileReports.forEach((fileResult) => {
+    const pathArray = fileResult.name.split('/');
+    let parentFolder = structuredFiles;
+    if (pathArray.length > 1) {
+      for (const folderName of pathArray.slice(0, -1)) {
+        let folder = parentFolder.tests?.find(
+          (element) => element.name.toLowerCase() === folderName.toLowerCase()
         );
         if (folder == null) {
           folder = {
             uuid: newUuid(),
-            name: capitalizeFirstLetter(each),
+            name: capitalizeFirstLetter(folderName),
             tests: [],
           };
-          position.tests?.push(folder);
+          parentFolder.tests?.push(folder);
         }
-        position = folder;
+        parentFolder = folder;
       }
     }
-    position.tests?.push({
+    parentFolder.tests?.push({
       ...fileResult,
       name: capitalizeFirstLetter(fileResult.name.substring(fileResult.name.lastIndexOf('/') + 1)),
     });
@@ -49,6 +48,7 @@ export function convertReport(source: PwReport): Report {
     tests: structuredFiles,
   };
   return report;
+
 }
 
 function convertSuiteArray(source: PwSuite[]): (Suite | Test)[] {
