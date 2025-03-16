@@ -3,6 +3,7 @@ import { Execution, Report, Statistics, Status, Suite, Test } from '@/types/repo
 
 import playwrightReport from '../../test-results-3-projects.json';
 import { newUuid } from './uuid-factory';
+import { groupSpecFileReportsByFolders, suiteNameFromFileName } from './report-utils';
 
 export function getFromReportFile(): Report {
   return convertReport(playwrightReport);
@@ -11,44 +12,6 @@ export function getFromReportFile(): Report {
 export function convertReport(source: PwReport): Report {
   const specFileReports = convertSuiteArray(source.suites);
   return groupSpecFileReportsByFolders(specFileReports);
-}
-
-function groupSpecFileReportsByFolders(specFileReports: (Suite | Test)[]) {
-  const structuredFiles: Suite = {
-    uuid: newUuid(),
-    name: '',
-    tests: [],
-  };
-  specFileReports.forEach((fileResult) => {
-    const pathArray = fileResult.name.split('/');
-    let parentFolder = structuredFiles;
-    if (pathArray.length > 1) {
-      for (const folderName of pathArray.slice(0, -1)) {
-        let folder = parentFolder.tests?.find(
-          (element) => element.name.toLowerCase() === folderName.toLowerCase()
-        );
-        if (folder == null) {
-          folder = {
-            uuid: newUuid(),
-            name: capitalizeFirstLetter(folderName),
-            tests: [],
-          };
-          parentFolder.tests?.push(folder);
-        }
-        parentFolder = folder;
-      }
-    }
-    parentFolder.tests?.push({
-      ...fileResult,
-      name: capitalizeFirstLetter(fileResult.name.substring(fileResult.name.lastIndexOf('/') + 1)),
-    });
-  });
-
-  const report: Report = {
-    tests: structuredFiles,
-  };
-  return report;
-
 }
 
 function convertSuiteArray(source: PwSuite[]): (Suite | Test)[] {
@@ -69,13 +32,7 @@ function convertPwSuite(source: PwSuite): Suite {
 }
 
 function buildGroupName(source: PwSuite) {
-  return source.title == source.file
-    ? capitalizeFirstLetter(source.title.replace('.ts', '').replace('.spec', '').replace('-', ' '))
-    : source.title;
-}
-
-function capitalizeFirstLetter(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
+  return source.title == source.file ? suiteNameFromFileName(source.title) : source.title;
 }
 
 function convertSpecArray(source: PwSpec[]): Test[] {
