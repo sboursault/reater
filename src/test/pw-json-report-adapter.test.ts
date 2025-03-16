@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { convertReport } from './pw-json-report-adapter.js';
+import { convertReport } from '../services/pw-json-report-adapter.js';
 import { PwReport } from '@/types/playwright-report.js';
 
-vi.mock('./uuid-factory', () => {
+vi.mock('../services/uuid-factory', () => {
   return {
     newUuid: vi.fn().mockImplementation(() => '0000'),
   };

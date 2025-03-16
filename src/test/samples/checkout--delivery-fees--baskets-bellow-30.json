@@ -1,0 +1,259 @@
+{
+    "uuid": "6566b354-134f-4ca8-ac24-c7c80346db08",
+    "name": "For baskets strictly bellow 30€, we charge 7€ delivery fees",
+    "historyId": "8db4dee4555e1083658fb77258fc9114:5bd835b0d6b1d4ada3b9f0db936e82c8",
+    "status": "passed",
+    "statusDetails": {},
+    "stage": "finished",
+    "steps": [
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "start": 1740906214012,
+                            "name": "browserType.launch",
+                            "stop": 1740906214603
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906214008,
+                    "name": "fixture: browser",
+                    "stop": 1740906214604
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "start": 1740906214610,
+                            "name": "browser.newContext",
+                            "stop": 1740906214641
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906214606,
+                    "name": "fixture: context",
+                    "stop": 1740906214647
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "start": 1740906214660,
+                            "name": "browserContext.newPage",
+                            "stop": 1740906215000
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906214653,
+                    "name": "fixture: page",
+                    "stop": 1740906215000
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906215001,
+                    "name": "fixture: catalogPage",
+                    "stop": 1740906215002
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906215003,
+                    "name": "fixture: basketPage",
+                    "stop": 1740906215004
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906213998,
+            "name": "Before Hooks",
+            "stop": 1740906215004
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906215011,
+            "name": "page.goto(/)",
+            "stop": 1740906216780
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906216792,
+            "name": "locator.getByTestId('product-pod-add-button-208').click",
+            "stop": 1740906217500
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906217511,
+            "name": "page.goto(/basket)",
+            "stop": 1740906217868
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906217872,
+            "name": "expect.toContainText",
+            "stop": 1740906217902
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906217904,
+                    "name": "fixture: basketPage",
+                    "stop": 1740906217904
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906217904,
+                    "name": "fixture: catalogPage",
+                    "stop": 1740906217905
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906217905,
+                    "name": "fixture: page",
+                    "stop": 1740906217905
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906217905,
+                    "name": "fixture: context",
+                    "stop": 1740906217905
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906217902,
+            "name": "After Hooks",
+            "stop": 1740906217926
+        }
+    ],
+    "attachments": [],
+    "parameters": [
+        {
+            "name": "Project",
+            "value": "chromium"
+        }
+    ],
+    "labels": [
+        {
+            "name": "language",
+            "value": "javascript"
+        },
+        {
+            "name": "framework",
+            "value": "playwright"
+        },
+        {
+            "name": "package",
+            "value": "checkout.delivery-fees.spec.ts"
+        },
+        {
+            "name": "titlePath",
+            "value": " > chromium > checkout/delivery-fees.spec.ts"
+        },
+        {
+            "name": "host",
+            "value": "seb-HP-ENVY-Notebook"
+        },
+        {
+            "name": "thread",
+            "value": "pid-97759-worker-0"
+        },
+        {
+            "name": "parentSuite",
+            "value": "chromium"
+        },
+        {
+            "name": "suite",
+            "value": "checkout/delivery-fees.spec.ts"
+        }
+    ],
+    "links": [],
+    "start": 1740906213991,
+    "testCaseId": "8db4dee4555e1083658fb77258fc9114",
+    "fullName": "checkout/delivery-fees.spec.ts:3:5",
+    "stop": 1740906217302
+}

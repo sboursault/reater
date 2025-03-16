@@ -1,0 +1,247 @@
+{
+    "uuid": "f3e166a6-e478-4531-a430-04f17d5ca955",
+    "name": "For baskets strictly over 30€, we offer delivery fees",
+    "historyId": "ee6f7a9cbb0e3f95fac86ae11b002df3:b444eb0fbe6390c71e68b51dd25701fc",
+    "status": "passed",
+    "statusDetails": {},
+    "stage": "finished",
+    "steps": [
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "start": 1740906247789,
+                            "name": "browser.newContext",
+                            "stop": 1740906247806
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906247788,
+                    "name": "fixture: context",
+                    "stop": 1740906247807
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "start": 1740906247816,
+                            "name": "browserContext.newPage",
+                            "stop": 1740906248126
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906247808,
+                    "name": "fixture: page",
+                    "stop": 1740906248126
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906248127,
+                    "name": "fixture: catalogPage",
+                    "stop": 1740906248127
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906248128,
+                    "name": "fixture: basketPage",
+                    "stop": 1740906248128
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906247780,
+            "name": "Before Hooks",
+            "stop": 1740906248128
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906248131,
+            "name": "page.goto(/)",
+            "stop": 1740906248882
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906248887,
+            "name": "locator.getByTestId('product-pod-add-button-208').click",
+            "stop": 1740906249646
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906249649,
+            "name": "locator.getByTestId('product-pod-add-button-209').click",
+            "stop": 1740906250594
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906250601,
+            "name": "page.goto(/basket)",
+            "stop": 1740906250862
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906250864,
+            "name": "expect.toContainText",
+            "stop": 1740906250912
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906250913,
+                    "name": "fixture: basketPage",
+                    "stop": 1740906250913
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906250914,
+                    "name": "fixture: catalogPage",
+                    "stop": 1740906250914
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906250914,
+                    "name": "fixture: page",
+                    "stop": 1740906250914
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906250915,
+                    "name": "fixture: context",
+                    "stop": 1740906250916
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906250912,
+            "name": "After Hooks",
+            "stop": 1740906250927
+        }
+    ],
+    "attachments": [],
+    "parameters": [
+        {
+            "name": "Project",
+            "value": "firefox"
+        }
+    ],
+    "labels": [
+        {
+            "name": "language",
+            "value": "javascript"
+        },
+        {
+            "name": "framework",
+            "value": "playwright"
+        },
+        {
+            "name": "package",
+            "value": "checkout.delivery-fees.spec.ts"
+        },
+        {
+            "name": "titlePath",
+            "value": " > firefox > checkout/delivery-fees.spec.ts"
+        },
+        {
+            "name": "host",
+            "value": "seb-HP-ENVY-Notebook"
+        },
+        {
+            "name": "thread",
+            "value": "pid-97759-worker-0"
+        },
+        {
+            "name": "parentSuite",
+            "value": "firefox"
+        },
+        {
+            "name": "suite",
+            "value": "checkout/delivery-fees.spec.ts"
+        }
+    ],
+    "links": [],
+    "start": 1740906247784,
+    "testCaseId": "ee6f7a9cbb0e3f95fac86ae11b002df3",
+    "fullName": "checkout/delivery-fees.spec.ts:14:5",
+    "stop": 1740906250921
+}
