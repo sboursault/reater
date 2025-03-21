@@ -1,46 +1,67 @@
-import { Report, Suite, Test } from '@/types/report';
+import { Report, Suite } from '@/types/report';
 
 import { newUuid } from './uuid-factory';
+import { FlatReportItem as FlatReport } from '@/types/flat-report';
 
-export function groupSpecFileReportsByFolders(specFileReports: (Suite | Test)[]) {
-  const structuredFiles: Suite = {
+export function buildReportFromFlatItems(source: FlatReport[]): Report {
+  const root: Suite = {
     uuid: newUuid(),
     name: '',
+    subSuites: [],
     tests: [],
   };
-  specFileReports.forEach((fileResult) => {
-    const pathArray = fileResult.name.split('/');
-    let parentFolder = structuredFiles;
-    if (pathArray.length > 1) {
-      for (const folderName of pathArray.slice(0, -1)) {
-        let folder = parentFolder.tests?.find(
-          (element) => element.name.toLowerCase() === folderName.toLowerCase()
-        );
-        if (folder == null) {
-          folder = {
-            uuid: newUuid(),
-            name: capitalizeFirstLetter(folderName),
-            tests: [],
-          };
-          parentFolder.tests?.push(folder);
-        }
-        parentFolder = folder;
+
+  source.forEach((report) => {
+    let parentNode = root;
+    for (let pathPart of report.path.split('/')) {
+      if (pathPart.endsWith('.ts') || pathPart.endsWith('.js'))
+        pathPart = suiteNameFromFileName(pathPart);
+      else pathPart = capitalizeFirstLetter(pathPart);
+
+      let node = parentNode.subSuites.find((node) => node.name === pathPart);
+      if (node === undefined) {
+        node = {
+          uuid: newUuid(),
+          name: pathPart,
+          subSuites: [],
+          tests: [],
+        };
+        parentNode.subSuites.push(node);
       }
+      parentNode = node;
     }
-    parentFolder.tests?.push({
-      ...fileResult,
-      name: capitalizeFirstLetter(fileResult.name.substring(fileResult.name.lastIndexOf('/') + 1)),
+
+    let testNode = parentNode.tests.find((node) => node.name === report.name);
+    if (testNode === undefined) {
+      testNode = {
+        uuid: newUuid(),
+        name: report.name,
+        executions: [],
+        path: report.path + '/' + report.name,
+      };
+      parentNode.tests.push(testNode);
+    }
+    testNode.executions.push({
+      name: report.project,
+      status : report.status,
+      error : report.error
     });
   });
 
-  const report: Report = {
-    tests: structuredFiles,
+  return {
+    tests: root,
   };
-  return report;
 }
 
 export function suiteNameFromFileName(filename: string) {
-  return capitalizeFirstLetter(filename.replace('.ts', '').replace('.spec', '').replace('-', ' '));
+  return capitalizeFirstLetter(
+    filename
+      .replace('.test.ts', '')
+      .replace('.test.js', '')
+      .replace('.spec.ts', '')
+      .replace('.spec.js', '')
+      .replace('-', ' ')
+  );
 }
 
 export function capitalizeFirstLetter(s: string) {

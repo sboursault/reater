@@ -6,13 +6,15 @@ export interface Report {
 export interface Suite {
   uuid: string
   name: string
-  tests?: (Suite | Test)[]
+  subSuites: Suite[]
+  tests: Test[]
   stats?: Statistics
 }
 
 export interface Test {
   uuid: string
   name: string
+  path: string
   steps?: string[]
   executions: Execution[]
   stats?: Statistics

@@ -1,9 +1,10 @@
 import { Report, Status, Test, Suite, Statistics } from '@/types/report';
 import { v4 as uuidv4 } from 'uuid';
-import { getFromReportFile } from './pw-json-report-adapter'
+import { getFromReportFile } from './pw-json-report-adapter';
+import { buildReportFromFlatItems } from './report-utils';
 
 export function getReport(): Report {
-  const report: Report = getFromReportFile();
+  const report: Report = buildReportFromFlatItems(getFromReportFile());
   report.tests.stats = calculateSuiteStatistics(report.tests);
   return report;
 }
@@ -38,7 +39,6 @@ function calculateTestStatistics(test: Test) {
   });
   return result;
 }
-
 
 export function getDummyReport(): Suite {
   return {

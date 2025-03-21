@@ -1,66 +1,39 @@
 import { PwReport, PwSpec, PwSuite } from '@/types/playwright-report';
-import { Execution, Report, Statistics, Status, Suite, Test } from '@/types/report';
-
+import { Report, Statistics, Status, Test } from '@/types/report';
 import playwrightReport from '../../test-results-3-projects.json';
 import { newUuid } from './uuid-factory';
-import { groupSpecFileReportsByFolders, suiteNameFromFileName } from './report-utils';
+import { buildReportFromFlatItems, suiteNameFromFileName } from './report-utils';
+import { FlatReportItem } from '@/types/flat-report';
 
-export function getFromReportFile(): Report {
-  return convertReport(playwrightReport);
+export function getFromReportFile(): FlatReportItem[] {
+  return convertToFlatReport(playwrightReport);
 }
 
-export function convertReport(source: PwReport): Report {
-  const specFileReports = convertSuiteArray(source.suites);
-  return groupSpecFileReportsByFolders(specFileReports);
+export function convertToFlatReport(source: PwReport): FlatReportItem[] {
+  return convertSuite(source, '');
 }
 
-function convertSuiteArray(source: PwSuite[]): (Suite | Test)[] {
-  return source.map((suite) => {
-    return convertPwSuite(suite);
-  });
+function convertSuite(source: PwSuite | PwReport, path: string): FlatReportItem[] {
+  let result: FlatReportItem[] = [];
+  if (source.suites) {
+    for (const suite of source.suites) {
+      result = result.concat(convertSuite(suite, (path ? path + '/' : '') + suite.title));
+    }
+  }
+  if ('specs' in source) {
+    result = result.concat(source.specs.map((spec) => convertSpec(spec, path)));
+  }
+  return result;
 }
 
-function convertPwSuite(source: PwSuite): Suite {
-  // when a test file contains a single top level 'describe', we skip the file node
-  if (source.title == source.file && source.suites?.length == 1) source = source.suites[0];
-
+function convertSpec(source: PwSpec, path: string): FlatReportItem {
   return {
     uuid: newUuid(),
-    name: buildGroupName(source),
-    tests: convertSuiteArray(source.suites || []).concat(convertSpecArray(source.specs)),
+    name: source.title,
+    path,
+    project: source.tests[0].projectName,
+    steps: [],
+    status: source.tests[0].results[0].error == null ? Status.success : Status.failed,
+    error: source.tests[0].results[0].error,
   };
-}
-
-function buildGroupName(source: PwSuite) {
-  return source.title == source.file ? suiteNameFromFileName(source.title) : source.title;
-}
-
-function convertSpecArray(source: PwSpec[]): Test[] {
-  const groupByFileAndLine = new Map<string, PwSpec[]>();
-  const target: Test[] = [];
-
-  source.forEach((each) => {
-    const key: string = each.file + ':' + each.line;
-    if (!groupByFileAndLine.has(key)) groupByFileAndLine.set(key, []);
-    groupByFileAndLine.get(key)?.push(each);
-  });
-
-  groupByFileAndLine.forEach((group) => {
-    const executions: Execution[] = group.map((spec) => {
-      const error = spec.tests[0]?.results[0]?.error;
-      return {
-        name: spec.tests[0].projectName,
-        status: spec.ok ? Status.success : Status.failed,
-        error,
-      };
-    });
-    target.push({
-      name: group[0].title,
-      uuid: newUuid(),
-      executions: executions,
-      stats: new Statistics(),
-    });
-  });
-
-  return target;
 }

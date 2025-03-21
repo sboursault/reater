@@ -60,11 +60,12 @@ export default function TestTree({
   const expandAll = () => {
     const suiteUuids: string[] = [];
     function gatherUuids(suite: Suite) {
-      (suite.tests || []).forEach((each) => {
-        if ('uuid' in each) {
-          suiteUuids.push(each.uuid);
-          gatherUuids(each);
-        }
+      suite.subSuites.forEach((each) => {
+        //if ('uuid' in each) {
+        suiteUuids.push(each.uuid);
+        suite.tests.forEach((test) => suiteUuids.push(test.uuid));
+        gatherUuids(each);
+        //}
       });
     }
     gatherUuids(report.tests);
@@ -152,6 +153,7 @@ function SuiteLeaves({
   filter: TestFilter;
 }): ReactNode {
   const isVisibleTest = (test: Test) => {
+    return true // fix me
     return (
       ((filter.status.indexOf(Status.success) >= 0 &&
         test.stats != null &&
@@ -167,26 +169,27 @@ function SuiteLeaves({
   };
 
   const isVisibleSuite = (suite: Suite) => {
-    const tests = suite.tests || [];
-    for (let i = 0; i < tests.length; i++) {
-      const each = tests[i];
-      if ('executions' in each) {
-        if (isVisibleTest(each)) return true;
-      } else {
-        if (isVisibleSuite(each)) return true;
-      }
+    for (let i = 0; i < suite.tests.length; i++) {
+      const each = suite.tests[i];
+      if (isVisibleTest(each)) return true;
+    }
+    for (let i = 0; i < suite.subSuites.length; i++) {
+      const each = suite.subSuites[i];
+      if (isVisibleSuite(each)) return true;
     }
     return false;
   };
 
   const isCollapsed = expandedSuites.indexOf(data.uuid) === -1;
 
+  //console.log(data.tests)
+
   return (
     <>
-      {data.tests && (
+      {(data.tests || data.subSuites) && (
         <ul className={`menu-list ${isCollapsed ? 'is-hidden' : ''}`}>
-          {(data.tests || []).map((each, index) => {
-            return 'executions' in each ? (
+          {data.tests.map((each, index) => {
+            return (
               <TestRow
                 key={index}
                 data={each}
@@ -194,7 +197,10 @@ function SuiteLeaves({
                 isActive={activeTest?.name === data.name}
                 isVisible={isVisibleTest(each)}
               />
-            ) : (
+            );
+          })}
+          {data.subSuites.map((each, index) => {
+            return (
               <SuiteTree
                 key={index}
                 expandedSuites={expandedSuites}
@@ -235,7 +241,7 @@ function SuiteTree({
   return (
     <li className={isVisible ? '' : 'is-hidden'}>
       <a onClick={() => expandCollapaseSuite(data)}>
-        {data.tests && (
+        {data.subSuites && (
           <span className="icon">
             <i
               className={`${
@@ -269,6 +275,9 @@ function TestRow({
   isActive: boolean;
   isVisible: boolean;
 }) {
+  console.log('TestRow');
+  console.log(data);
+
   const tags = data.executions.map((execution, index) => {
     const status =
       execution.status == Status.success

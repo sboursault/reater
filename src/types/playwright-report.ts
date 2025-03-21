@@ -67,9 +67,9 @@ export interface PwSuite {
 export interface PwSpec {
   title: string
   ok: boolean
-  //tags: any[]
+  tags: any[]
   tests: PwTest[]
-  //id: string
+  id: string
   file: string
   line: number
   column: number
@@ -86,9 +86,9 @@ export interface PwTest {
 }
 
 export interface Result {
-  workerIndex: number
-  //status: string
-  //duration: number
+  //workerIndex: number
+  status: string
+  duration: number
   //errors: Error[]
   //stdout: any[]
   //stderr: any[]

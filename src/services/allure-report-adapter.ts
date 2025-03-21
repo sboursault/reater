@@ -6,26 +6,24 @@ import { join } from 'path';
 import * as fs from 'fs';
 
 export function convertReportFromFiles(paths: string[]) {
-
-  const report : AllureReport = 
-  JSON.parse(
+  const report: AllureReport = JSON.parse(
     fs.readFileSync(join(process.cwd(), paths[0])).toString()
-  )
-  return convertReport(report)
+  );
+  return convertReport(report);
 }
 
-export function convertReport(source: AllureReport): Report {
+function convertReport(source: AllureReport): Report {
   return groupSpecFileReportsByFolders([
     {
       name: suiteNameFromFileName(source.labels.find((it) => it.name === 'suite')?.value || ''),
       uuid: newUuid(),
-      tests : [
+      tests: [
         {
           name: source.name,
           executions: [],
           uuid: newUuid(),
-        }
-      ]
+        },
+      ],
     },
   ]);
 }

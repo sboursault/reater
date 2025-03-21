@@ -1,0 +1,207 @@
+{
+    "uuid": "59d08e4f-9174-4c75-810e-cd5afdaf0d1a",
+    "name": "The mini-basket always shows the number of products in basket",
+    "historyId": "a946a139b74d27508bf4d7bc79f1d7ad:5bd835b0d6b1d4ada3b9f0db936e82c8",
+    "status": "passed",
+    "statusDetails": {},
+    "stage": "finished",
+    "steps": [
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "start": 1740906230974,
+                            "name": "browser.newContext",
+                            "stop": 1740906230980
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906230972,
+                    "name": "fixture: context",
+                    "stop": 1740906230982
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [
+                        {
+                            "status": "passed",
+                            "statusDetails": {},
+                            "stage": "finished",
+                            "steps": [],
+                            "attachments": [],
+                            "parameters": [],
+                            "start": 1740906230986,
+                            "name": "browserContext.newPage",
+                            "stop": 1740906231043
+                        }
+                    ],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906230984,
+                    "name": "fixture: page",
+                    "stop": 1740906231043
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906231044,
+                    "name": "fixture: catalogPage",
+                    "stop": 1740906231046
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906230966,
+            "name": "Before Hooks",
+            "stop": 1740906231046
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906231049,
+            "name": "page.goto(/)",
+            "stop": 1740906231617
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906231622,
+            "name": "locator.getByTestId('product-pod-add-button-209').click",
+            "stop": 1740906232298
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906232301,
+            "name": "expect.toContainText",
+            "stop": 1740906232369
+        },
+        {
+            "status": "passed",
+            "statusDetails": {},
+            "stage": "finished",
+            "steps": [
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906232370,
+                    "name": "fixture: catalogPage",
+                    "stop": 1740906232371
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906232371,
+                    "name": "fixture: page",
+                    "stop": 1740906232372
+                },
+                {
+                    "status": "passed",
+                    "statusDetails": {},
+                    "stage": "finished",
+                    "steps": [],
+                    "attachments": [],
+                    "parameters": [],
+                    "start": 1740906232372,
+                    "name": "fixture: context",
+                    "stop": 1740906232373
+                }
+            ],
+            "attachments": [],
+            "parameters": [],
+            "start": 1740906232369,
+            "name": "After Hooks",
+            "stop": 1740906232386
+        }
+    ],
+    "attachments": [],
+    "parameters": [
+        {
+            "name": "Project",
+            "value": "chromium"
+        }
+    ],
+    "labels": [
+        {
+            "name": "language",
+            "value": "javascript"
+        },
+        {
+            "name": "framework",
+            "value": "playwright"
+        },
+        {
+            "name": "package",
+            "value": "mini-basket.spec.ts"
+        },
+        {
+            "name": "titlePath",
+            "value": " > chromium > mini-basket.spec.ts > Mini-basket > Toggle"
+        },
+        {
+            "name": "host",
+            "value": "seb-HP-ENVY-Notebook"
+        },
+        {
+            "name": "thread",
+            "value": "pid-97759-worker-0"
+        },
+        {
+            "name": "parentSuite",
+            "value": "chromium"
+        },
+        {
+            "name": "suite",
+            "value": "mini-basket.spec.ts"
+        },
+        {
+            "name": "subSuite",
+            "value": "Mini-basket > Toggle"
+        }
+    ],
+    "links": [],
+    "start": 1740906230975,
+    "testCaseId": "a946a139b74d27508bf4d7bc79f1d7ad",
+    "fullName": "mini-basket.spec.ts:5:9",
+    "stop": 1740906232385
+}
