@@ -31,6 +31,7 @@ function convertSpec(source: PwSpec, path: string): FlatReportItem {
     uuid: newUuid(),
     name: source.title,
     path,
+    testFile: source.file,
     project: source.tests[0].projectName,
     steps: [],
     status: source.tests[0].results[0].error == null ? Status.success : Status.failed,

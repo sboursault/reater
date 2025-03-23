@@ -40,44 +40,4 @@ describe('Test', {}, () => {
     });
   });
 
-  test('calculate suite stats', () => {
-    const suite: Suite = {
-      uuid: '',
-      name: 'suite',
-      subSuites: [
-        {
-          uuid: '',
-          name: 'suite',
-          subSuites: [],
-          tests: [
-            new Test('My test', 'file.spec.ts ')
-          ],
-        },
-      ],
-      tests: [],
-    };
-    const test = new Test('My test', 'file.spec.ts ');
-
-    test.addExecution({
-      name: 'firefox',
-      status: Status.success,
-    });
-
-    expect(test).toEqual({
-      name: 'My test',
-      path: 'file.spec.ts ',
-      executions: [
-        {
-          name: 'firefox',
-          status: Status.success,
-        },
-      ],
-      stats: {
-        passedCount: 1,
-        failedCount: 0,
-        skippedCount: 0,
-      },
-      uuid: '0000',
-    });
-  });
 });

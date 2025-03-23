@@ -9,26 +9,31 @@ export interface Report {
 export class Suite {
   uuid: string;
   name: string;
+  testFile: string;
   subSuites: Suite[] = [];
   tests: Test[] = [];
   stats: Statistics;
 
-  constructor(name: string) {
+  constructor(name: string, testFile: string) {
     this.uuid = newUuid()
     this.name = name;
+    this.testFile = testFile;
     this.stats = new Statistics();
   }
 
   addFlatReport(report: FlatReportItem) {
     let parentNode:Suite = this;
+    let testFile: string = ''
     for (let pathPart of report.path.split('/')) {
-      if (pathPart.endsWith('.ts') || pathPart.endsWith('.js'))
+      if (pathPart.endsWith('.ts') || pathPart.endsWith('.js')) {
         pathPart = suiteNameFromFileName(pathPart);
+        testFile = report.testFile
+      }
       else pathPart = capitalizeFirstLetter(pathPart);
 
       let suiteNode = parentNode.subSuites.find((node) => node.name === pathPart);
       if (suiteNode === undefined) {
-        suiteNode = new Suite(pathPart);
+        suiteNode = new Suite(pathPart, testFile);
         parentNode.subSuites.push(suiteNode);
       }
       suiteNode.addExecutionStats(report)

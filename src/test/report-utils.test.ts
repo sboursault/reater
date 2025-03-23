@@ -20,6 +20,7 @@ describe('buildReportFromFlatItems', {}, () => {
         uuid: '0001',
         name: 'After login, the mini basket contains the items from my last session',
         path: 'basket-recovery.spec.ts',
+        testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
         status: Status.success,
         steps: [],
@@ -28,6 +29,7 @@ describe('buildReportFromFlatItems', {}, () => {
         uuid: '0002',
         name: 'After logout, the mini basket is empty',
         path: 'basket-recovery.spec.ts',
+        testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
         status: Status.success,
         steps: [],
@@ -36,6 +38,7 @@ describe('buildReportFromFlatItems', {}, () => {
         uuid: '0003',
         name: 'The login accepts valid credentials',
         path: 'login.spec.ts/Login',
+        testFile: 'login.spec.ts',
         project: 'chromium',
         status: Status.failed,
         steps: [],
@@ -44,18 +47,11 @@ describe('buildReportFromFlatItems', {}, () => {
         uuid: '0004',
         name: 'For baskets strictly bellow 30€, we charge 7€ delivery fees',
         path: 'checkout/delivery-fees.spec.ts',
+        testFile: 'checkout/delivery-fees.spec.ts',
         project: 'chromium',
         status: Status.success,
         steps: [],
       },
-      /*{
-        uuid: '0004',
-        name: 'For baskets strictly bellow 30€, we charge 7€ delivery fees',
-        path: 'checkout/delivery-fees.spec.ts',
-        project: 'firefox',
-        status: Status.success,
-        steps: [],
-      },*/
     ];
 
     const got = buildReportFromFlatItems(input);
@@ -113,6 +109,7 @@ describe('buildReportFromFlatItems', {}, () => {
         uuid: '0001',
         name: 'After login, the mini basket contains the items from my last session',
         path: 'basket-recovery.spec.ts',
+        testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
         status: Status.success,
         steps: [],
@@ -121,6 +118,7 @@ describe('buildReportFromFlatItems', {}, () => {
         uuid: '0003',
         name: 'The login accepts valid credentials',
         path: 'user/login.spec.ts',
+        testFile: 'user/login.spec.ts',
         project: 'chromium',
         status: Status.failed,
         steps: [],
@@ -129,6 +127,7 @@ describe('buildReportFromFlatItems', {}, () => {
         uuid: '0004',
         name: 'The login accepts valid credentials',
         path: 'user/login.spec.ts',
+        testFile: 'user/login.spec.ts',
         project: 'firefox',
         status: Status.success,
         steps: [],
@@ -191,93 +190,71 @@ describe('buildReportFromFlatItems', {}, () => {
     });
   });
 
-  /*test('flatten top level describe', () => {
-    const input: PwReport = {
-      suites: [
+  test('flatten top level describe', () => {
+    const input: FlatReportItem[] = [
+      {
+        uuid: '0001',
+        name: 'The mini basket contains the items from my last session',
+        path: 'basket-recovery.spec.ts/After login',
+        testFile: 'basket-recovery.spec.ts',
+        project: 'chromium',
+        status: Status.success,
+        steps: [],
+      },
+      {
+        uuid: '0002',
+        name: 'The mini basket is empty',
+        path: 'basket-recovery.spec.ts/After logout',
+        testFile: 'basket-recovery.spec.ts',
+        project: 'chromium',
+        status: Status.success,
+        steps: [],
+      },
+      {
+        uuid: '0003',
+        name: 'The login accepts valid credentials',
+        path: 'login.spec.ts/Login',
+        testFile: 'login.spec.ts',
+        project: 'chromium',
+        status: Status.failed,
+        steps: [],
+      },
+    ];
+
+    const got = buildReportFromFlatItems(input);
+
+    expect(got.tests).toMatchObject({
+      subSuites: [
         {
-          // a test file with a single top level describe
-          title: 'basket-recovery.spec.ts',
-          file: 'basket-recovery.spec.ts',
-          column: 0,
-          line: 0,
-          suites: [
+          name: 'Basket recovery',
+          subSuites: [
             {
-              title: 'Basket recovery',
-              file: 'basket-recovery.spec.ts',
-              line: 0,
-              column: 0,
-              specs: [],
+              name: 'After login',
+              tests: [
+                {
+                  name: 'The mini basket contains the items from my last session',
+                },
+              ],
+            },
+            {
+              name: 'After logout',
+              tests: [
+                {
+                  name: 'The mini basket is empty',
+                },
+              ],
             },
           ],
-          specs: [],
         },
         {
-          // a test file without top level describe
-          title: 'delivery-fees.spec.ts',
-          file: 'delivery-fees.spec.ts',
-          column: 0,
-          line: 0,
-          specs: [],
-        },
-        {
-          // a test file without several top level describes
-          title: 'account.spec.ts',
-          file: 'account.spec.ts',
-          column: 0,
-          line: 0,
-          suites: [
+          name: 'Login',
+          tests: [
             {
-              title: 'Registration',
-              file: 'account.spec.ts',
-              line: 0,
-              column: 0,
-              specs: [],
-            },
-            {
-              title: 'Login',
-              file: 'account.spec.ts',
-              line: 0,
-              column: 0,
-              specs: [],
+              name: 'The login accepts valid credentials',
             },
           ],
-          specs: [],
         },
       ],
-    };
-    expect(convertReport(input)).toEqual({
-      tests: {
-        name: '',
-        uuid: '0000',
-        tests: [
-          {
-            name: 'Basket recovery',
-            uuid: '0000',
-            tests: [],
-          },
-          {
-            name: 'Delivery fees',
-            tests: [],
-            uuid: '0000',
-          },
-          {
-            name: 'Account',
-            tests: [
-              {
-                name: 'Registration',
-                tests: [],
-                uuid: '0000',
-              },
-              {
-                name: 'Login',
-                tests: [],
-                uuid: '0000',
-              },
-            ],
-            uuid: '0000',
-          },
-        ],
-      },
     });
-  });*/
+  });
 });
