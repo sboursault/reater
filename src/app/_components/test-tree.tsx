@@ -153,7 +153,6 @@ function SuiteLeaves({
   filter: TestFilter;
 }): ReactNode {
   const isVisibleTest = (test: Test) => {
-    return true // fix me
     return (
       ((filter.status.indexOf(Status.success) >= 0 &&
         test.stats != null &&
@@ -181,8 +180,6 @@ function SuiteLeaves({
   };
 
   const isCollapsed = expandedSuites.indexOf(data.uuid) === -1;
-
-  //console.log(data.tests)
 
   return (
     <>
@@ -275,9 +272,6 @@ function TestRow({
   isActive: boolean;
   isVisible: boolean;
 }) {
-  console.log('TestRow');
-  console.log(data);
-
   const tags = data.executions.map((execution, index) => {
     const status =
       execution.status == Status.success

@@ -5,29 +5,26 @@ import { buildReportFromFlatItems } from './report-utils';
 
 export function getReport(): Report {
   const report: Report = buildReportFromFlatItems(getFromReportFile());
-  report.tests.stats = calculateSuiteStatistics(report.tests);
+  calculateSuiteStatistics(report.tests);
   return report;
 }
 
-function calculateSuiteStatistics(suite: Suite | Test) {
-  if ('executions' in suite) {
-    return calculateTestStatistics(suite);
-  }
+function calculateSuiteStatistics(suite: Suite) {
+  suite.tests.forEach((test) => calculateTestStatistics(test));
+  suite.subSuites.forEach((subSuite) => calculateSuiteStatistics(subSuite));
 
-  if ('tests' in suite) {
-    (suite.tests || []).forEach((each) => {
-      each.stats = calculateSuiteStatistics(each);
-    });
-    const result = new Statistics();
-    (suite.tests || []).forEach((each) => {
-      if (each.stats) {
-        result.passedCount += each.stats.passedCount;
-        result.failedCount += each.stats.failedCount;
-        result.skippedCount += each.stats.skippedCount;
-      }
-    });
-    return result;
-  }
+  const result = new Statistics();
+  const subStats: Statistics[] = suite.tests
+    .map((test) => test.stats || new Statistics())  // try to replace by composable types
+    .concat(suite.subSuites.map((subSuite) => subSuite.stats || new Statistics()));
+
+  subStats.forEach((each) => {
+    result.passedCount += each.passedCount;
+    result.failedCount += each.failedCount;
+    result.skippedCount += each.skippedCount;
+  });
+
+  return suite.stats = result;
 }
 
 function calculateTestStatistics(test: Test) {
@@ -37,7 +34,7 @@ function calculateTestStatistics(test: Test) {
     if (each.status == Status.failed) result.failedCount++;
     if (each.status == Status.skipped) result.skippedCount++;
   });
-  return result;
+  test.stats = result;
 }
 
 export function getDummyReport(): Suite {
