@@ -1,15 +1,56 @@
-import { newUuid } from "@/services/uuid-factory"
+import { newUuid } from '@/services/uuid-factory';
+import { FlatReportItem } from './flat-report'
+import { capitalizeFirstLetter, suiteNameFromFileName } from '@/services/report-utils'
 
 export interface Report {
   tests: Suite;
 }
 
-export interface Suite {
+export class Suite {
   uuid: string;
   name: string;
-  subSuites: Suite[];
-  tests: Test[];
-  stats?: Statistics;
+  subSuites: Suite[] = [];
+  tests: Test[] = [];
+  stats: Statistics;
+
+  constructor(name: string) {
+    this.uuid = newUuid()
+    this.name = name;
+    this.stats = new Statistics();
+  }
+
+  addFlatReport(report: FlatReportItem) {
+    let parentNode:Suite = this;
+    for (let pathPart of report.path.split('/')) {
+      if (pathPart.endsWith('.ts') || pathPart.endsWith('.js'))
+        pathPart = suiteNameFromFileName(pathPart);
+      else pathPart = capitalizeFirstLetter(pathPart);
+
+      let suiteNode = parentNode.subSuites.find((node) => node.name === pathPart);
+      if (suiteNode === undefined) {
+        suiteNode = new Suite(pathPart);
+        parentNode.subSuites.push(suiteNode);
+      }
+      suiteNode.addExecutionStats(report)
+      parentNode = suiteNode;
+    }
+
+    let testNode = parentNode.tests.find((node) => node.name === report.name);
+    if (testNode === undefined) {
+      testNode = new Test(report.name, report.path + '/' + report.name);
+      parentNode.tests.push(testNode);
+    }
+    testNode.addExecution({
+      name: report.project,
+      status : report.status,
+      error : report.error
+    });
+  }
+  addExecutionStats(execution: Execution) {
+    if (execution.status == Status.success) this.stats.passedCount++;
+    if (execution.status == Status.failed) this.stats.failedCount++;
+    if (execution.status == Status.skipped) this.stats.skippedCount++;
+  }
 }
 
 export class Test {
@@ -17,14 +58,13 @@ export class Test {
   name: string;
   path: string;
   steps?: string[]; // not the right place
-  executions: Execution[];
+  executions: Execution[] = [];
   stats: Statistics;
 
   constructor(name: string, path: string) {
     this.uuid = newUuid();
     this.name = name;
     this.path = path;
-    this.executions = [];
     this.stats = new Statistics();
   }
 

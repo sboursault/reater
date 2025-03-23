@@ -14,7 +14,7 @@ beforeEach(() => {
 });
 
 describe('buildReportFromFlatItems', {}, () => {
-  test('test 1', () => {
+  test('build tree', () => {
     const input: FlatReportItem[] = [
       {
         uuid: '0001',
@@ -37,7 +37,7 @@ describe('buildReportFromFlatItems', {}, () => {
         name: 'The login accepts valid credentials',
         path: 'login.spec.ts/Login',
         project: 'chromium',
-        status: Status.success,
+        status: Status.failed,
         steps: [],
       },
       {
@@ -67,15 +67,11 @@ describe('buildReportFromFlatItems', {}, () => {
           tests: [
             {
               name: 'After login, the mini basket contains the items from my last session',
-              executions : [
-                { name: 'chromium'}
-              ]
+              executions: [{ name: 'chromium' }],
             },
             {
               name: 'After logout, the mini basket is empty',
-              executions : [
-                { name: 'chromium'}
-              ]
+              executions: [{ name: 'chromium' }],
             },
           ],
         },
@@ -87,9 +83,7 @@ describe('buildReportFromFlatItems', {}, () => {
               tests: [
                 {
                   name: 'The login accepts valid credentials',
-                  executions : [
-                    { name: 'chromium'}
-                  ]
+                  executions: [{ name: 'chromium' }],
                 },
               ],
             },
@@ -103,13 +97,95 @@ describe('buildReportFromFlatItems', {}, () => {
               tests: [
                 {
                   name: 'For baskets strictly bellow 30€, we charge 7€ delivery fees',
-                  executions : [
-                    { name: 'chromium'}
-                  ]
+                  executions: [{ name: 'chromium' }],
                 },
               ],
             },
           ],
+        },
+      ],
+    });
+  });
+
+  test('calculate stats', () => {
+    const input: FlatReportItem[] = [
+      {
+        uuid: '0001',
+        name: 'After login, the mini basket contains the items from my last session',
+        path: 'basket-recovery.spec.ts',
+        project: 'chromium',
+        status: Status.success,
+        steps: [],
+      },
+      {
+        uuid: '0003',
+        name: 'The login accepts valid credentials',
+        path: 'user/login.spec.ts',
+        project: 'chromium',
+        status: Status.failed,
+        steps: [],
+      },
+      {
+        uuid: '0004',
+        name: 'The login accepts valid credentials',
+        path: 'user/login.spec.ts',
+        project: 'firefox',
+        status: Status.success,
+        steps: [],
+      },
+    ];
+
+    const got = buildReportFromFlatItems(input);
+
+    expect(got.tests).toMatchObject({
+      subSuites: [
+        {
+          name: 'Basket recovery',
+          tests: [
+            {
+              name: 'After login, the mini basket contains the items from my last session',
+              executions: [{ name: 'chromium' }],
+              stats: {
+                passedCount: 1,
+                failedCount: 0,
+                skippedCount: 0,
+              },
+            },
+          ],
+          stats: {
+            passedCount: 1,
+            failedCount: 0,
+            skippedCount: 0,
+          },
+        },
+        {
+          name: 'User',
+          subSuites: [
+            {
+              name: 'Login',
+              tests: [
+                {
+                  name: 'The login accepts valid credentials',
+                  executions: [{ name: 'chromium' }, { name: 'firefox' }],
+                  stats: {
+                    passedCount: 1,
+                    failedCount: 1,
+                    skippedCount: 0,
+                  },
+                },
+              ],
+              stats: {
+                passedCount: 1,
+                failedCount: 1,
+                skippedCount: 0,
+              },
+            },
+          ],
+          stats: {
+            passedCount: 1,
+            failedCount: 1,
+            skippedCount: 0,
+          },
         },
       ],
     });
@@ -204,5 +280,4 @@ describe('buildReportFromFlatItems', {}, () => {
       },
     });
   });*/
-
 });

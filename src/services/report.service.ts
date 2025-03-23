@@ -4,27 +4,9 @@ import { getFromReportFile } from './pw-json-report-adapter';
 import { buildReportFromFlatItems } from './report-utils';
 
 export function getReport(): Report {
-  const report: Report = buildReportFromFlatItems(getFromReportFile());
-  calculateSuiteStatistics(report.tests);
-  return report;
+  return buildReportFromFlatItems(getFromReportFile());
 }
 
-function calculateSuiteStatistics(suite: Suite) {
-  suite.subSuites.forEach((subSuite) => calculateSuiteStatistics(subSuite));
-
-  const result = new Statistics();
-  const subStats: Statistics[] = suite.tests
-    .map((test) => test.stats) 
-    .concat(suite.subSuites.map((subSuite) => subSuite.stats || new Statistics()));  // move this to an addExecution method
-
-  subStats.forEach((each) => {
-    result.passedCount += each.passedCount;
-    result.failedCount += each.failedCount;
-    result.skippedCount += each.skippedCount;
-  });
-
-  return suite.stats = result;
-}
 
 export function getDummyReport(): Suite {
   return {

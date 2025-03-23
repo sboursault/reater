@@ -154,27 +154,19 @@ function SuiteLeaves({
 }): ReactNode {
   const isVisibleTest = (test: Test) => {
     return (
-      ((filter.status.indexOf(Status.success) >= 0 &&
-        test.stats != null &&
-        test.stats.passedCount > 0) ||
-        (filter.status.indexOf(Status.failed) >= 0 &&
-          test.stats != null &&
-          test.stats.failedCount > 0) ||
-        (filter.status.indexOf(Status.skipped) >= 0 &&
-          test.stats != null &&
-          test.stats.skippedCount > 0)) &&
+      ((filter.status.indexOf(Status.success) >= 0 && test.stats.passedCount > 0) ||
+        (filter.status.indexOf(Status.failed) >= 0 && test.stats.failedCount > 0) ||
+        (filter.status.indexOf(Status.skipped) >= 0 && test.stats.skippedCount > 0)) &&
       (filter.text.length == 0 || test.name.toLowerCase().indexOf(filter.text.toLowerCase()) != -1)
     );
   };
 
   const isVisibleSuite = (suite: Suite) => {
     for (let i = 0; i < suite.tests.length; i++) {
-      const each = suite.tests[i];
-      if (isVisibleTest(each)) return true;
+      if (isVisibleTest(suite.tests[i])) return true;
     }
     for (let i = 0; i < suite.subSuites.length; i++) {
-      const each = suite.subSuites[i];
-      if (isVisibleSuite(each)) return true;
+      if (isVisibleSuite(suite.subSuites[i])) return true;
     }
     return false;
   };

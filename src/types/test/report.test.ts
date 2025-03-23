@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { Status, Test } from '@/types/report.js';
+import { Status, Suite, Test } from '@/types/report.js';
 import { FlatReportItem } from '@/types/flat-report.js';
 import { buildReportFromFlatItems } from '@/services/report-utils.js';
 
@@ -14,7 +14,48 @@ beforeEach(() => {
 });
 
 describe('Test', {}, () => {
-  test('calculate stats', () => {
+  test('calculate test stats', () => {
+    const test = new Test('My test', 'file.spec.ts ');
+
+    test.addExecution({
+      name: 'firefox',
+      status: Status.success,
+    });
+
+    expect(test).toEqual({
+      name: 'My test',
+      path: 'file.spec.ts ',
+      executions: [
+        {
+          name: 'firefox',
+          status: Status.success,
+        },
+      ],
+      stats: {
+        passedCount: 1,
+        failedCount: 0,
+        skippedCount: 0,
+      },
+      uuid: '0000',
+    });
+  });
+
+  test('calculate suite stats', () => {
+    const suite: Suite = {
+      uuid: '',
+      name: 'suite',
+      subSuites: [
+        {
+          uuid: '',
+          name: 'suite',
+          subSuites: [],
+          tests: [
+            new Test('My test', 'file.spec.ts ')
+          ],
+        },
+      ],
+      tests: [],
+    };
     const test = new Test('My test', 'file.spec.ts ');
 
     test.addExecution({
