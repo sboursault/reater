@@ -10,13 +10,12 @@ export function getReport(): Report {
 }
 
 function calculateSuiteStatistics(suite: Suite) {
-  suite.tests.forEach((test) => calculateTestStatistics(test));
   suite.subSuites.forEach((subSuite) => calculateSuiteStatistics(subSuite));
 
   const result = new Statistics();
   const subStats: Statistics[] = suite.tests
-    .map((test) => test.stats || new Statistics())  // try to replace by composable types
-    .concat(suite.subSuites.map((subSuite) => subSuite.stats || new Statistics()));
+    .map((test) => test.stats) 
+    .concat(suite.subSuites.map((subSuite) => subSuite.stats || new Statistics()));  // move this to an addExecution method
 
   subStats.forEach((each) => {
     result.passedCount += each.passedCount;
@@ -25,16 +24,6 @@ function calculateSuiteStatistics(suite: Suite) {
   });
 
   return suite.stats = result;
-}
-
-function calculateTestStatistics(test: Test) {
-  const result = new Statistics();
-  test.executions.forEach((each) => {
-    if (each.status == Status.success) result.passedCount++;
-    if (each.status == Status.failed) result.failedCount++;
-    if (each.status == Status.skipped) result.skippedCount++;
-  });
-  test.stats = result;
 }
 
 export function getDummyReport(): Suite {

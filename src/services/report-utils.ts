@@ -1,4 +1,4 @@
-import { Report, Suite } from '@/types/report';
+import { Report, Suite, Test } from '@/types/report';
 
 import { newUuid } from './uuid-factory';
 import { FlatReportItem as FlatReport } from '@/types/flat-report';
@@ -33,15 +33,10 @@ export function buildReportFromFlatItems(source: FlatReport[]): Report {
 
     let testNode = parentNode.tests.find((node) => node.name === report.name);
     if (testNode === undefined) {
-      testNode = {
-        uuid: newUuid(),
-        name: report.name,
-        executions: [],
-        path: report.path + '/' + report.name,
-      };
+      testNode = new Test(report.name, report.path + '/' + report.name);
       parentNode.tests.push(testNode);
     }
-    testNode.executions.push({
+    testNode.addExecution({
       name: report.project,
       status : report.status,
       error : report.error
