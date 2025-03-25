@@ -1,5 +1,5 @@
 import { newUuid } from '@/services/uuid-factory';
-import { FlatReportItem } from './flat-report'
+import { FlatReport } from './flat-report'
 import { capitalizeFirstLetter, suiteNameFromFileName } from '@/services/report-utils'
 
 export interface Report {
@@ -21,7 +21,7 @@ export class Suite {
     this.stats = new Statistics();
   }
 
-  addFlatReport(report: FlatReportItem) {
+  addFlatReport(report: FlatReport) {
     let parentNode:Suite = this;
     let testFile: string = ''
     for (let pathPart of report.path.split('/')) {

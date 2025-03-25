@@ -1,6 +1,6 @@
 import { Error, Status } from "./report";
 
-export interface FlatReportItem {
+export interface FlatReport {
   uuid: string;
   name: string;
   path: string;

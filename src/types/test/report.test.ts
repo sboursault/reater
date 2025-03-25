@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { Status, Suite, Test } from '@/types/report.js';
-import { FlatReportItem } from '@/types/flat-report.js';
+import { FlatReport } from '@/types/flat-report.js';
 import { buildReportFromFlatItems } from '@/services/report-utils.js';
 
 vi.mock('../../services/uuid-factory', () => {

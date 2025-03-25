@@ -3,18 +3,18 @@ import { Report, Statistics, Status, Test } from '@/types/report';
 import playwrightReport from '../../test-results-3-projects.json';
 import { newUuid } from './uuid-factory';
 import { buildReportFromFlatItems, suiteNameFromFileName } from './report-utils';
-import { FlatReportItem } from '@/types/flat-report';
+import { FlatReport } from '@/types/flat-report';
 
-export function getFromReportFile(): FlatReportItem[] {
+export function getFromReportFile(): FlatReport[] {
   return convertToFlatReport(playwrightReport);
 }
 
-export function convertToFlatReport(source: PwReport): FlatReportItem[] {
+export function convertToFlatReport(source: PwReport): FlatReport[] {
   return convertSuite(source, '');
 }
 
-function convertSuite(source: PwSuite | PwReport, path: string): FlatReportItem[] {
-  let result: FlatReportItem[] = [];
+function convertSuite(source: PwSuite | PwReport, path: string): FlatReport[] {
+  let result: FlatReport[] = [];
   if (source.suites) {
     for (const suite of source.suites) {
       result = result.concat(convertSuite(suite, (path ? path + '/' : '') + suite.title));
@@ -26,7 +26,7 @@ function convertSuite(source: PwSuite | PwReport, path: string): FlatReportItem[
   return result;
 }
 
-function convertSpec(source: PwSpec, path: string): FlatReportItem {
+function convertSpec(source: PwSpec, path: string): FlatReport {
   return {
     uuid: newUuid(),
     name: source.title,

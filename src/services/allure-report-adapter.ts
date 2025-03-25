@@ -1,29 +1,24 @@
 import { AllureReport } from '@/types/allure-report';
-import { Report } from '@/types/report';
+import { Report, Status } from '@/types/report';
 import { newUuid } from './uuid-factory';
-import { groupSpecFileReportsByFolders, suiteNameFromFileName } from './report-utils';
 import { join } from 'path';
 import * as fs from 'fs';
+import { FlatReport } from '@/types/flat-report';
 
-export function convertReportFromFiles(paths: string[]) {
-  const report: AllureReport = JSON.parse(
-    fs.readFileSync(join(process.cwd(), paths[0])).toString()
-  );
-  return convertReport(report);
-}
-
-function convertReport(source: AllureReport): Report {
-  return groupSpecFileReportsByFolders([
-    {
-      name: suiteNameFromFileName(source.labels.find((it) => it.name === 'suite')?.value || ''),
+export function convertReportFromFiles(reportFiles: string[]): FlatReport[] {
+  return reportFiles.map((reportFile) => {
+    const report: AllureReport = JSON.parse(
+      fs.readFileSync(join(process.cwd(), reportFile)).toString()
+    );
+    return {
       uuid: newUuid(),
-      tests: [
-        {
-          name: source.name,
-          executions: [],
-          uuid: newUuid(),
-        },
-      ],
-    },
-  ]);
+      name: report.name,
+      path: report.labels.find((label) => label.name === 'suite')?.value || '',
+      testFile: report.labels.find((label) => label.name === 'suite')?.value || '',
+      project: report.labels.find((label) => label.name === 'parentSuite')?.value || '',
+      status: report.status === 'passed' ? Status.success : Status.failed,
+      error: undefined,
+      steps: []
+    };
+  });
 }

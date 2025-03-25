@@ -1,7 +1,7 @@
 import { Report, Suite, Test } from '@/types/report';
 
 import { newUuid } from './uuid-factory';
-import { FlatReportItem as FlatReport } from '@/types/flat-report';
+import { FlatReport as FlatReport } from '@/types/flat-report';
 
 export function buildReportFromFlatItems(source: FlatReport[]): Report {
   const root = new Suite('', '');

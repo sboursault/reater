@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { Status } from '@/types/report.js';
-import { FlatReportItem } from '@/types/flat-report.js';
+import { FlatReport } from '@/types/flat-report.js';
 import { buildReportFromFlatItems } from '@/services/report-utils.js';
 
 vi.mock('../services/uuid-factory', () => {
@@ -15,7 +15,7 @@ beforeEach(() => {
 
 describe('buildReportFromFlatItems', {}, () => {
   test('build tree', () => {
-    const input: FlatReportItem[] = [
+    const input: FlatReport[] = [
       {
         uuid: '0001',
         name: 'After login, the mini basket contains the items from my last session',
@@ -104,7 +104,7 @@ describe('buildReportFromFlatItems', {}, () => {
   });
 
   test('calculate stats', () => {
-    const input: FlatReportItem[] = [
+    const input: FlatReport[] = [
       {
         uuid: '0001',
         name: 'After login, the mini basket contains the items from my last session',
@@ -191,7 +191,7 @@ describe('buildReportFromFlatItems', {}, () => {
   });
 
   test('flatten top level describe', () => {
-    const input: FlatReportItem[] = [
+    const input: FlatReport[] = [
       {
         uuid: '0001',
         name: 'The mini basket contains the items from my last session',
