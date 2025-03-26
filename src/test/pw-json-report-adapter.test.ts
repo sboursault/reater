@@ -58,6 +58,7 @@ describe('convertReport', {}, () => {
       uuid: '0000',
       name: 'After login, the mini basket contains the items from my last session',
       path: 'basket-recovery.spec.ts',
+      testFile: 'basket-recovery.spec.ts',
       project: 'chromium',
       status: Status.failed,
       steps: [],

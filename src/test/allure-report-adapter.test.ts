@@ -13,15 +13,12 @@ beforeEach(() => {
 });
 
 describe('convertReportFromFiles', () => {
-  test('organize tests by folders', () => {
-
+  test('test in a sub folder', () => {
     const got = convertReportFromFiles([
       'src/test/samples/allure/checkout--delivery-fees--baskets-bellow-30.json',
-    ])
+    ]);
 
-    expect(
-      got
-    ).toEqual([
+    expect(got).toEqual([
       {
         name: 'For baskets strictly bellow 30€, we charge 7€ delivery fees',
         uuid: '0000',
@@ -34,33 +31,21 @@ describe('convertReportFromFiles', () => {
     ]);
   });
 
-  /*  test('basic case', () => {
-    expect(
-      convertReportFromFiles(['src/test/samples/allure/mini-basket--toggle--product-count.json'])
-    ).toEqual({
-      tests: {
-        name: '',
+  test('test in a "describe"', () => {
+    const got = convertReportFromFiles([
+      'src/test/samples/allure/mini-basket--toggle--product-count.json',
+    ]);
+
+    expect(got).toEqual([
+      {
+        name: 'The mini-basket always shows the number of products in basket',
         uuid: '0000',
-        tests: [
-          {
-            name: 'Mini-basket',
-            uuid: '0000',
-            tests: [
-              {
-                name: 'Toggle',
-                uuid: '0000',
-                tests: [
-                  {
-                    name: 'The mini-basket always shows the number of products in basket',
-                    uuid: '0000',
-                    executions: [],
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+        path: 'mini-basket.spec.ts/Mini-basket/Toggle',
+        testFile: 'mini-basket.spec.ts',
+        project: 'chromium',
+        steps: [],
+        status: Status.success,
       },
-    });
-  });*/
+    ]);
+  });
 });

@@ -37,8 +37,8 @@ describe('buildReportFromFlatItems', {}, () => {
       {
         uuid: '0003',
         name: 'The login accepts valid credentials',
-        path: 'login.spec.ts/Login',
-        testFile: 'login.spec.ts',
+        path: 'authentication.spec.ts/Login/With valid Credentials',
+        testFile: 'authentication.spec.ts',
         project: 'chromium',
         status: Status.failed,
         steps: [],
@@ -75,7 +75,7 @@ describe('buildReportFromFlatItems', {}, () => {
           name: 'Login',
           subSuites: [
             {
-              name: 'Login',
+              name: 'With valid Credentials',
               tests: [
                 {
                   name: 'The login accepts valid credentials',
