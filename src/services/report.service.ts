@@ -19,7 +19,7 @@ export function getDummyReport(): Suite {
         executions: [
           {
             name: 'chromium',
-            status: Status.success,
+            status: Status.passed,
           },
           {
             name: 'firefox',
@@ -38,7 +38,7 @@ export function getDummyReport(): Suite {
             executions: [
               {
                 name: 'chromium',
-                status: Status.success,
+                status: Status.passed,
               },
             ],
             steps: ['Step 1', 'Step 2', 'Step 3'],
@@ -79,7 +79,7 @@ export function getDummyReport(): Suite {
                     executions: [
                       {
                         name: 'chromium',
-                        status: Status.success,
+                        status: Status.passed,
                       },
                     ],
                     steps: ['Step 1', 'Step 2', 'Step 3'],
@@ -90,7 +90,7 @@ export function getDummyReport(): Suite {
                     executions: [
                       {
                         name: 'chromium',
-                        status: Status.success,
+                        status: Status.passed,
                       },
                     ],
                     steps: ['Step 1', 'Step 2', 'Step 3'],
@@ -105,7 +105,7 @@ export function getDummyReport(): Suite {
                         executions: [
                           {
                             name: 'chromium',
-                            status: Status.success,
+                            status: Status.passed,
                           },
                         ],
                         steps: ['Step 1', 'Step 2', 'Step 3'],
@@ -127,7 +127,7 @@ export function getDummyReport(): Suite {
                         executions: [
                           {
                             name: 'chromium',
-                            status: Status.success,
+                            status: Status.passed,
                           },
                         ],
                         steps: ['Step 1', 'Step 2', 'Step 3'],
@@ -144,7 +144,7 @@ export function getDummyReport(): Suite {
             executions: [
               {
                 name: 'chromium',
-                status: Status.success,
+                status: Status.passed,
               },
             ],
             steps: ['Step 1', 'Step 2', 'Step 3'],
@@ -161,7 +161,7 @@ export function getDummyReport(): Suite {
             executions: [
               {
                 name: 'chromium',
-                status: Status.success,
+                status: Status.passed,
               },
             ],
             steps: ['Step 1', 'Step 2', 'Step 3'],
@@ -185,7 +185,7 @@ export function getDummyReport(): Suite {
         executions: [
           {
             name: 'chromium',
-            status: Status.success,
+            status: Status.passed,
           },
         ],
         steps: ['Step 1', 'Step 2', 'Step 3'],

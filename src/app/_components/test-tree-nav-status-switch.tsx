@@ -13,8 +13,8 @@ export function TestTreeNavStatusSwitch({
     toggleFilters: (status: Status) => void,
   }
 ) {
-  const inputClass = status == Status.success ? "passed" : status == Status.failed ? "failed" : "skipped";
-  const label = status == Status.success ? "Passed" : status == Status.failed ? "Failed" : "Skipped";
+  const inputClass = status == Status.passed ? "passed" : status == Status.failed ? "failed" : "skipped";
+  const label = status == Status.passed ? "Passed" : status == Status.failed ? "Failed" : "Skipped";
   const htmlId = `passed` + label
 
   const onChange = () => {

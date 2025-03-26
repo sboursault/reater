@@ -19,7 +19,7 @@ export default function TestTree({
   activeTest: Test | null;
 }) {
   const [filter, setFilter] = useState<TestFilter>({
-    status: [Status.success, Status.failed, Status.skipped],
+    status: [Status.passed, Status.failed, Status.skipped],
     text: '',
   });
   const [expandedSuites, setExpandedSuites] = useState<string[]>([report.tests.uuid]);
@@ -92,7 +92,7 @@ export default function TestTree({
         </div>
 
         <TestTreeNavStatusSwitch
-          status={Status.success}
+          status={Status.passed}
           filters={filter.status}
           className="ml-2"
           toggleFilters={toggleFilters}
@@ -154,7 +154,7 @@ function SuiteLeaves({
 }): ReactNode {
   const isVisibleTest = (test: Test) => {
     return (
-      ((filter.status.indexOf(Status.success) >= 0 && test.stats.passedCount > 0) ||
+      ((filter.status.indexOf(Status.passed) >= 0 && test.stats.passedCount > 0) ||
         (filter.status.indexOf(Status.failed) >= 0 && test.stats.failedCount > 0) ||
         (filter.status.indexOf(Status.skipped) >= 0 && test.stats.skippedCount > 0)) &&
       (filter.text.length == 0 || test.name.toLowerCase().indexOf(filter.text.toLowerCase()) != -1)
@@ -266,7 +266,7 @@ function TestRow({
 }) {
   const tags = data.executions.map((execution, index) => {
     const status =
-      execution.status == Status.success
+      execution.status == Status.passed
         ? 'has-text-success-soft-invert has-background-success-soft'
         : execution.status == Status.failed
         ? 'has-text-danger-soft-invert has-background-danger-soft'

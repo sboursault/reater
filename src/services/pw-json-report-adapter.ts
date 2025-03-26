@@ -34,7 +34,7 @@ function convertSpec(source: PwSpec, path: string): FlatReport {
     testFile: source.file,
     project: source.tests[0].projectName,
     steps: [],
-    status: source.tests[0].results[0].error == null ? Status.success : Status.failed,
+    status: source.tests[0].results[0].error == null ? Status.passed : Status.failed,
     error: source.tests[0].results[0].error,
   };
 }

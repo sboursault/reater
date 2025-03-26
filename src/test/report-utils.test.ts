@@ -22,7 +22,7 @@ describe('buildReportFromFlatItems', {}, () => {
         path: 'basket-recovery.spec.ts',
         testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
-        status: Status.success,
+        status: Status.passed,
         steps: [],
       },
       {
@@ -31,7 +31,7 @@ describe('buildReportFromFlatItems', {}, () => {
         path: 'basket-recovery.spec.ts',
         testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
-        status: Status.success,
+        status: Status.passed,
         steps: [],
       },
       {
@@ -49,7 +49,7 @@ describe('buildReportFromFlatItems', {}, () => {
         path: 'checkout/delivery-fees.spec.ts',
         testFile: 'checkout/delivery-fees.spec.ts',
         project: 'chromium',
-        status: Status.success,
+        status: Status.passed,
         steps: [],
       },
     ];
@@ -111,7 +111,7 @@ describe('buildReportFromFlatItems', {}, () => {
         path: 'basket-recovery.spec.ts',
         testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
-        status: Status.success,
+        status: Status.passed,
         steps: [],
       },
       {
@@ -129,7 +129,7 @@ describe('buildReportFromFlatItems', {}, () => {
         path: 'user/login.spec.ts',
         testFile: 'user/login.spec.ts',
         project: 'firefox',
-        status: Status.success,
+        status: Status.passed,
         steps: [],
       },
     ];
@@ -198,7 +198,7 @@ describe('buildReportFromFlatItems', {}, () => {
         path: 'basket-recovery.spec.ts/After login',
         testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
-        status: Status.success,
+        status: Status.passed,
         steps: [],
       },
       {
@@ -207,7 +207,7 @@ describe('buildReportFromFlatItems', {}, () => {
         path: 'basket-recovery.spec.ts/After logout',
         testFile: 'basket-recovery.spec.ts',
         project: 'chromium',
-        status: Status.success,
+        status: Status.passed,
         steps: [],
       },
       {

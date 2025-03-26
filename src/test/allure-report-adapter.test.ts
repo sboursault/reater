@@ -26,7 +26,7 @@ describe('convertReportFromFiles', () => {
         testFile: 'checkout/delivery-fees.spec.ts',
         project: 'chromium',
         steps: [],
-        status: Status.success,
+        status: Status.passed,
       },
     ]);
   });
@@ -44,7 +44,7 @@ describe('convertReportFromFiles', () => {
         testFile: 'mini-basket.spec.ts',
         project: 'chromium',
         steps: [],
-        status: Status.success,
+        status: Status.passed,
       },
     ]);
   });

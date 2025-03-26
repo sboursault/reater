@@ -58,7 +58,7 @@ export function ExecutionTab({
   const select = () => {
     selectExecution(execution)
   }
-  const color = execution.status == Status.success ? 'has-text-success' : execution.status == Status.failed ? 'has-text-danger' : 'is-dark'
+  const color = execution.status == Status.passed ? 'has-text-success' : execution.status == Status.failed ? 'has-text-danger' : 'is-dark'
   return <li
     className={isActive ? 'is-active' : ''}>
     <a

@@ -16,7 +16,7 @@ export function convertReportFromFiles(reportFiles: string[]): FlatReport[] {
       path: buildTestPath(report),
       testFile: findLabelOrError(report, 'suite'),
       project: findLabelOrError(report, 'parentSuite'),
-      status: report.status === 'passed' ? Status.success : Status.failed,
+      status: report.status === 'passed' ? Status.passed : Status.failed,
       error: undefined,
       steps: [],
     };

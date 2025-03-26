@@ -52,7 +52,7 @@ export class Suite {
     });
   }
   addExecutionStats(execution: Execution) {
-    if (execution.status == Status.success) this.stats.passedCount++;
+    if (execution.status == Status.passed) this.stats.passedCount++;
     if (execution.status == Status.failed) this.stats.failedCount++;
     if (execution.status == Status.skipped) this.stats.skippedCount++;
   }
@@ -75,7 +75,7 @@ export class Test {
 
   addExecution(execution: Execution) {
     this.executions.push(execution);
-    if (execution.status == Status.success) this.stats.passedCount++;
+    if (execution.status == Status.passed) this.stats.passedCount++;
     if (execution.status == Status.failed) this.stats.failedCount++;
     if (execution.status == Status.skipped) this.stats.skippedCount++;
   }
@@ -88,7 +88,7 @@ export interface Execution {
 }
 
 export enum Status {
-  success,
+  passed,
   failed,
   skipped,
 }
