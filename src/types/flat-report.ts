@@ -1,4 +1,4 @@
-import { Error, Status } from "./report";
+import { Error, Status, Step } from "./report";
 
 export interface FlatReport {
   uuid: string;
@@ -6,7 +6,7 @@ export interface FlatReport {
   path: string;
   testFile: string;
   project: string
-  steps?: string[];
+  steps?: Step[];
   status: Status;
   error?: Error;
 }

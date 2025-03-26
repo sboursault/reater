@@ -5,7 +5,7 @@ export interface AllureReport {
   status: string;
   statusDetails: any;
   stage: string;
-  steps: Step[];
+  steps: AllureStep[];
   attachments: any[];
   parameters: Parameter[];
   labels: Label[];
@@ -16,11 +16,11 @@ export interface AllureReport {
   stop: number;
 }
 
-export interface Step {
+export interface AllureStep {
   status: string;
   statusDetails: any;
   stage: string;
-  steps: Step[];
+  steps: AllureStep[];
   attachments: any[];
   parameters: any[];
   start: number;

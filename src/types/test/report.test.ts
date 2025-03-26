@@ -19,7 +19,7 @@ describe('Test', {}, () => {
 
     test.addExecution({
       name: 'firefox',
-      status: Status.success,
+      status: Status.passed,
     });
 
     expect(test).toEqual({
@@ -28,7 +28,7 @@ describe('Test', {}, () => {
       executions: [
         {
           name: 'firefox',
-          status: Status.success,
+          status: Status.passed,
         },
       ],
       stats: {

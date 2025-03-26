@@ -62,7 +62,6 @@ export class Test {
   uuid: string;
   name: string;
   path: string;
-  steps?: string[]; // not the right place
   executions: Execution[] = [];
   stats: Statistics;
 
@@ -85,6 +84,18 @@ export interface Execution {
   name: string;
   status: Status;
   error?: Error;
+  steps: Step[];
+  start: number;
+  stop: number;
+}
+
+export interface Step {
+  name: string;
+  status: Status;
+  steps: Step[];
+  attachments: any[];
+  start: number;
+  stop: number;
 }
 
 export enum Status {

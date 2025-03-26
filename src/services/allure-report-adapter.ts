@@ -1,5 +1,5 @@
-import { AllureReport, Label } from '@/types/allure-report';
-import { Report, Status } from '@/types/report';
+import { AllureReport, AllureStep, Label } from '@/types/allure-report';
+import { Status, Step } from '@/types/report';
 import { newUuid } from './uuid-factory';
 import { join } from 'path';
 import * as fs from 'fs';
@@ -18,7 +18,7 @@ export function convertReportFromFiles(reportFiles: string[]): FlatReport[] {
       project: findLabelOrError(report, 'parentSuite'),
       status: report.status === 'passed' ? Status.passed : Status.failed,
       error: undefined,
-      steps: [],
+      steps: report.steps.map(convertStep),
     };
   });
 }
@@ -38,6 +38,17 @@ function findLabelOrError(report: AllureReport, labelName: string): string {
 }
 
 function findLabel(report: AllureReport, labelName: string): string | undefined {
-  const label = report.labels.find((label) => label.name === labelName)
+  const label = report.labels.find((label) => label.name === labelName);
   return label ? label.value : undefined;
+}
+
+function convertStep(source: AllureStep): Step {
+  return {
+    name: source.name,
+    start: source.start,
+    stop: source.stop,
+    attachments: [],
+    status: source.status == 'passed' ? Status.passed : Status.failed,
+    steps: source.steps.map(convertStep),
+  };
 }
